@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { ref, computed } from "vue";
+
 import {
     NLayout,
     NConfigProvider,
@@ -46,8 +48,12 @@ export default {
         MainContent
     },
     setup() {
+        const isDaytime = ref(true);
+        const naiveTheme = computed(() => isDaytime.value ? {} : darkTheme);
+
         return {
-            darkTheme,
+            isDaytime,
+            naiveTheme
         }
     }
 }
