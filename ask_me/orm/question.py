@@ -23,3 +23,26 @@ class Question(db.Model):
     answered = db.Column(db.Boolean, default=False)
     answer = db.Column(db.Text)
     answered_at = db.Column(db.DateTime)
+
+    def __init__(self, title, body):
+        self.title = title
+        self.body = body
+        self.created_at = datetime.utcnow().replace(microsecond=0)
+
+    @classmethod
+    def add(cls, title, body):
+        db.session.add(cls(title, body))
+        db.session.commit()
+
+    @classmethod
+    def update(cls, id, title, body):
+        question = cls.query.get(id)
+        question.title = title
+        question.body = body
+        db.session.commit()
+
+    @classmethod
+    def delete(cls, id):
+        question = cls.query.get(id)
+        db.session.delete(question)
+        db.session.commit()
