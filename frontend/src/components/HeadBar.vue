@@ -37,7 +37,7 @@ export default {
     height: 100%;
     align-items: center;
     justify-content: space-between;
-    padding: 0 2vw;
+    padding: 0 32px;
 }
 
 h1 {
