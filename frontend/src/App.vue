@@ -11,7 +11,7 @@
                     <main-content></main-content>
                 </n-layout-content>
                 <n-layout-footer bordered>
-
+                    <foot-bar></foot-bar>
                 </n-layout-footer>
                 </n-scrollbar>
             </div>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, provide } from "vue";
 
 import {
     NLayout,
@@ -34,6 +34,7 @@ import {
 
 import HeadBar from "./components/HeadBar.vue";
 import MainContent from "./components/MainContent.vue";
+import FootBar from "./components/FootBar.vue";
 
 export default {
     name: 'App',
@@ -45,11 +46,21 @@ export default {
         NLayoutFooter,
         NScrollbar,
         HeadBar,
-        MainContent
+        MainContent,
+        FootBar
     },
     setup() {
         const isDaytime = ref(true);
         const naiveTheme = computed(() => isDaytime.value ? {} : darkTheme);
+
+        const switchTheme = () => {
+            isDaytime.value = !isDaytime.value;
+        };
+
+        provide("switchTheme", {
+            isDaytime,
+            switchTheme,
+        })
 
         return {
             isDaytime,

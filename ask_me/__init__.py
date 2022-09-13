@@ -61,6 +61,7 @@ def create_app():
 
     CORS(app)
     register_extensions(app)
+    check_table_exists(app)
 
     return app
 
