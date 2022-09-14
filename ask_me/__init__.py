@@ -6,10 +6,12 @@ import logging
 
 from .extensions import db
 
+from .blueprint.question_blueprint import question_bp
+
 __version__ = "1.0.0"
 
 
-def create_app():
+def create_app(*, is_test=False):
     """create and configure the app"""
     app = Flask(
         __name__,
@@ -17,7 +19,7 @@ def create_app():
         static_folder="./dist/static",
         template_folder="./dist",
     )
-    app.config.from_object("ant_net_monitor.config")
+    app.config.from_object("ask_me.config")
 
     try:
         gunicorn_error_logger = logging.getLogger("gunicorn.error")
@@ -39,9 +41,14 @@ def create_app():
     except OSError:
         pass
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        "sqlite:///" + app.instance_path + "/backend.sqlite"
-    )
+    if is_test:
+        app.config["SQLALCHEMY_DATABASE_URI"] = (
+            "sqlite:///" + app.instance_path + "/test.sqlite"
+        )
+    else:
+        app.config["SQLALCHEMY_DATABASE_URI"] = (
+            "sqlite:///" + app.instance_path + "/backend.sqlite"
+        )
 
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"connect_args": {"timeout": 15}}
 
@@ -62,6 +69,8 @@ def create_app():
     CORS(app)
     register_extensions(app)
     check_table_exists(app)
+
+    app.register_blueprint(question_bp)
 
     return app
 

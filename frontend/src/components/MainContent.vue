@@ -24,7 +24,9 @@ export default {
             argv: {
                 question: "这是一个问题",
                 answer: "这是一个答案",
-                title: "这是一个标题"
+                title: "这是一个标题",
+                created_at: new Date(2022, 6, 1, 0, 0, 0),
+                answered_at: new Date(2022, 7, 1, 0, 0, 0),
             }
         }
     }

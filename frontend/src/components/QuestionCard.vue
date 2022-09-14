@@ -13,9 +13,15 @@
                 查看答案
             </n-button>
         </template>
-        {{argv.question}}
+        {{argv.question}} 
+        <br>
+        <n-time :time="argv.created_at"></n-time>
         <template v-if="showAnswer" #footer>
-            <div v-if="argv.answer!=''">{{argv.answer}}</div>
+            <div v-if="argv.answer!=''">
+                {{argv.answer}}
+                <br>
+                <n-time :time="argv.answered_at"></n-time>
+            </div>
             <div v-else>
                 <n-empty description="暂无回答">
                     <template #icon>
@@ -31,7 +37,7 @@
 
 <script>
 import { ref } from "vue";
-import { NCard, NButton, NIcon, NEmpty } from "naive-ui";
+import { NCard, NButton, NIcon, NEmpty, NTime, } from "naive-ui";
 import { Key, Activity } from "@vicons/tabler"
 
 export default {
@@ -42,6 +48,7 @@ export default {
         NButton,
         NIcon,
         NEmpty,
+        NTime,
         Key,
         Activity
     },
@@ -50,7 +57,6 @@ export default {
         const switchAnswer = () => {
             showAnswer.value = !showAnswer.value;
         };
-
         return {
             showAnswer,
             switchAnswer
