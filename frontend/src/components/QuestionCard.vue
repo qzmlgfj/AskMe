@@ -1,5 +1,5 @@
 <template>
-    <n-card :title="argv.title" :segmented="{
+    <n-card hoverable :title="argv.title" :segmented="{
       content: true,
       footer: 'soft'
     }">

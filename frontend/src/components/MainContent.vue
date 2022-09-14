@@ -3,6 +3,12 @@
         <div class="column">
             <question-card :argv="argv"></question-card>
         </div>
+        <div class="column">
+            <question-card :argv="argv"></question-card>
+        </div>
+        <div class="column">
+            <question-card :argv="argv"></question-card>
+        </div>
     </div>
 </template>
 
