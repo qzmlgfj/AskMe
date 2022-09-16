@@ -8,39 +8,17 @@ export default {
     components: {
         Column,
     },
-    data() {
-        return {
-            argv: {
-                lst: [
-                    {
-                        question: "这是一个问题",
-                        answer: "这是一个答案",
-                        title: "这是一个标题",
-                        created_at: new Date(2022, 6, 1, 0, 0, 0),
-                        answered_at: new Date(2022, 7, 1, 0, 0, 0),
-                    },
-                    {
-                        question: "这是一个问题",
-                        answer: "这是一个答案",
-                        title: "这是一个标题",
-                        created_at: new Date(2022, 6, 1, 0, 0, 0),
-                        answered_at: new Date(2022, 7, 1, 0, 0, 0),
-                    },
-                    {
-                        question: "这是一个问题",
-                        answer: "这是一个答案",
-                        title: "这是一个标题",
-                        created_at: new Date(2022, 6, 1, 0, 0, 0),
-                        answered_at: new Date(2022, 7, 1, 0, 0, 0),
-                    },
-                ]
-            }
-        }
-    },
     setup() {
         const store = useStore();
         const column_num = computed(() => store.state.column_num);
         const question_data = [
+            {
+                question: "这是一个问题",
+                answer: "这是一个答案",
+                title: "这是一个标题",
+                created_at: new Date(2022, 6, 1, 0, 0, 0),
+                answered_at: new Date(2022, 7, 1, 0, 0, 0),
+            },
             {
                 question: "这是一个问题",
                 answer: "这是一个答案",

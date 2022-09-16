@@ -7,13 +7,20 @@
                     <head-bar></head-bar>
                 </n-layout-header>
                 <n-scrollbar style="max-height: 90vh;">
-                <n-layout-content>
-                    <main-content></main-content>
-                </n-layout-content>
-                <n-layout-footer bordered>
-                    <foot-bar></foot-bar>
-                </n-layout-footer>
+                    <n-layout-content>
+                        <main-content></main-content>
+                    </n-layout-content>
+                    <n-layout-footer bordered>
+                        <foot-bar></foot-bar>
+                    </n-layout-footer>
                 </n-scrollbar>
+                <n-button id="add-btn" circle strong type="info" size="large" @click="showModal = true">
+                    <template #icon>
+                        <playlist-add></playlist-add>
+                    </template>
+                </n-button>
+                <n-modal v-model:show="showModal" class="custom-card" preset="card" style="width: 30vw;" title="开始整蛊"
+                    size="huge" :bordered="false" :segmented="segmented" />
             </div>
         </n-layout>
     </n-config-provider>
@@ -29,8 +36,12 @@ import {
     NLayoutContent,
     NLayoutFooter,
     NScrollbar,
-    darkTheme
+    darkTheme,
+    NButton,
+    NModal
 } from "naive-ui";
+
+import { PlaylistAdd } from "@vicons/tabler";
 
 import HeadBar from "./components/HeadBar.vue";
 import MainContent from "./components/MainContent.vue";
@@ -45,6 +56,9 @@ export default {
         NLayoutContent,
         NLayoutFooter,
         NScrollbar,
+        NButton,
+        PlaylistAdd,
+        NModal,
         HeadBar,
         MainContent,
         FootBar
@@ -52,6 +66,7 @@ export default {
     setup() {
         const isDaytime = ref(true);
         const naiveTheme = computed(() => isDaytime.value ? {} : darkTheme);
+        const showModal = ref(false);
 
         const switchTheme = () => {
             isDaytime.value = !isDaytime.value;
@@ -64,7 +79,8 @@ export default {
 
         return {
             isDaytime,
-            naiveTheme
+            naiveTheme,
+            showModal,
         }
     }
 }
@@ -81,6 +97,7 @@ body {
 
 #container {
     height: 100vh;
+    position: relative;
 }
 
 .n-layout-header {
@@ -89,5 +106,11 @@ body {
 
 .n-layout-footer {
     height: 10vh;
+}
+
+#add-btn {
+    position: absolute;
+    right: 32px;
+    bottom: 32px;
 }
 </style>
