@@ -1,19 +1,30 @@
 <template>
     <div class="foot-bar">
-        <n-p>
-            Designed by Ant
-        </n-p>
+        <n-text depth="3">AskMe! {{version}} · Made by Ant</n-text>
     </div>
 </template>
 
 <script>
-import { NP } from "naive-ui";
+import { NText } from "naive-ui";
+
+
+import { getVersion } from "@/utils/request";
 export default {
     name: 'FooterBar',
     components: {
-        NP
-    }
-}
+        NText
+    },
+    data() {
+        return {
+            version: "",
+        };
+    },
+    mounted() {
+        getVersion().then((res) => {
+            this.version = res.data;
+        });
+    },
+};
 </script>
 
 <style scoped>

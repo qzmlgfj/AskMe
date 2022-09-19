@@ -1,5 +1,12 @@
 import { service } from "./service";
 
+function getVersion() {
+    return service({
+        method: "get",
+        url: "/api/version",
+    })
+}
+
 function getAllQuestions() {
     return service({
         method: "get",
@@ -23,4 +30,4 @@ function deleteQuestion(data) {
     })
 }
 
-export { getAllQuestions, addQuestion, deleteQuestion };
+export { getVersion, getAllQuestions, addQuestion, deleteQuestion };

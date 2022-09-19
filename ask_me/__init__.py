@@ -8,7 +8,7 @@ from .extensions import db
 
 from .blueprint.question_blueprint import question_bp
 
-__version__ = "1.0.0"
+__version__ = "0.0.1"
 
 
 def create_app(*, is_test=False):
