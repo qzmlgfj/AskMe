@@ -3,6 +3,8 @@ import Column from './Column.vue';
 import { ref, computed } from 'vue';
 import { useStore } from "vuex";
 
+import { getAllQuestions } from "@/utils/request";
+
 export default {
     name: 'MainContent',
     components: {
@@ -11,40 +13,10 @@ export default {
     setup() {
         const store = useStore();
         const column_num = computed(() => store.state.column_num);
-        const question_data = [
-            {
-                question: "这是一个问题",
-                answer: "这是一个答案",
-                title: "这是一个标题",
-                created_at: new Date(2022, 6, 1, 0, 0, 0),
-                answered_at: new Date(2022, 7, 1, 0, 0, 0),
-            },
-            {
-                question: "这是一个问题",
-                answer: "这是一个答案",
-                title: "这是一个标题",
-                created_at: new Date(2022, 6, 1, 0, 0, 0),
-                answered_at: new Date(2022, 7, 1, 0, 0, 0),
-            },
-            {
-                question: "这是一个问题",
-                answer: "这是一个答案",
-                title: "这是一个标题",
-                created_at: new Date(2022, 6, 1, 0, 0, 0),
-                answered_at: new Date(2022, 7, 1, 0, 0, 0),
-            },
-            {
-                question: "这是一个问题",
-                answer: "这是一个答案",
-                title: "这是一个标题",
-                created_at: new Date(2022, 6, 1, 0, 0, 0),
-                answered_at: new Date(2022, 7, 1, 0, 0, 0),
-            },
-        ];
         const column_lst = ref([]);
 
         // 将数据分散到不同的column中
-        const distribute_data = function () {
+        const distribute_data = function (question_data) {
             column_lst.value = [];
             for (let i = 0; i < column_num.value; i++) {
                 column_lst.value.push([]);
@@ -54,12 +26,24 @@ export default {
             }
         }
 
-        distribute_data();
+        const getData = function () {
+            getAllQuestions().then((res) => {
+                let question_data = res.data;
+                question_data.map((item) => {
+                    item.created_at = new Date(item.created_at);
+                    item.answered_at = new Date(item.answered_at);
+                });
+                distribute_data(question_data);
+            })
+        }
+
+        getData();
 
         return {
             column_num,
             column_lst,
             distribute_data,
+            getData
         }
     },
     render() {
@@ -86,7 +70,7 @@ export default {
 
 <style scoped>
 .main {
-    height: 100vh;
+    min-height: 80vh;
     box-sizing: border-box;
     padding: 32px;
 

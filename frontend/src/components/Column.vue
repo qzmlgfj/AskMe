@@ -1,5 +1,5 @@
 <script>
-import QuestionCard from './QuestionCard.vue';
+import QuestionCard from "./Cards/QuestionCard.vue";
 
 export default {
     name: 'Column',

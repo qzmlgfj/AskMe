@@ -19,8 +19,11 @@
                         <playlist-add></playlist-add>
                     </template>
                 </n-button>
-                <n-modal v-model:show="showModal" class="custom-card" preset="card" style="width: 30vw;" title="开始整蛊"
-                    size="huge" :bordered="false" :segmented="segmented" />
+                <n-message-provider>
+                    <n-modal v-model:show="showModal">
+                        <modal-card></modal-card>
+                    </n-modal>
+                </n-message-provider>
             </div>
         </n-layout>
     </n-config-provider>
@@ -38,11 +41,13 @@ import {
     NScrollbar,
     darkTheme,
     NButton,
+    NMessageProvider,
     NModal
 } from "naive-ui";
 
 import { PlaylistAdd } from "@vicons/tabler";
 
+import ModalCard from "./components/Cards/ModalCard.vue";
 import HeadBar from "./components/HeadBar.vue";
 import MainContent from "./components/MainContent.vue";
 import FootBar from "./components/FootBar.vue";
@@ -58,7 +63,9 @@ export default {
         NScrollbar,
         NButton,
         PlaylistAdd,
+        NMessageProvider,
         NModal,
+        ModalCard,
         HeadBar,
         MainContent,
         FootBar
@@ -72,15 +79,24 @@ export default {
             isDaytime.value = !isDaytime.value;
         };
 
+        const closeModal = () => {
+            showModal.value = false;
+        };
+
         provide("switchTheme", {
             isDaytime,
             switchTheme,
+        })
+
+        provide("closeModal", {
+            closeModal
         })
 
         return {
             isDaytime,
             naiveTheme,
             showModal,
+            closeModal
         }
     }
 }

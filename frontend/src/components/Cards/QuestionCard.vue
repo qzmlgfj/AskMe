@@ -13,11 +13,12 @@
                 查看答案
             </n-button>
         </template>
-        {{argv.question}} 
+        {{argv.content}} 
+        <br>
         <br>
         <n-time :time="argv.created_at"></n-time>
         <template v-if="showAnswer" #footer>
-            <div v-if="argv.answer!=''">
+            <div v-if="argv.answered">
                 {{argv.answer}}
                 <br>
                 <n-time :time="argv.answered_at"></n-time>

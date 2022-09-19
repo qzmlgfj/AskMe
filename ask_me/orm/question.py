@@ -8,8 +8,9 @@ from ..extensions import db
 class Question(db.Model):
     id: int
     title: str
-    question: str
+    content: str
     created_at: datetime
+    private: bool
 
     answered: bool
     answer: str
@@ -17,28 +18,31 @@ class Question(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.Text)
-    question = db.Column(db.Text)
+    content = db.Column(db.Text)
     created_at = db.Column(db.DateTime)
+    private = db.Column(db.Boolean, default=False)
 
     answered = db.Column(db.Boolean, default=False)
     answer = db.Column(db.Text)
     answered_at = db.Column(db.DateTime)
 
-    def __init__(self, title, question):
+    def __init__(self, title, content, private):
         self.title = title
-        self.question = question
+        self.content = content
+        self.private = private
         self.created_at = datetime.utcnow().replace(microsecond=0)
 
     @classmethod
-    def add(cls, title, question):
-        db.session.add(cls(title, question))
+    def add(cls, title, content, private):
+        db.session.add(cls(title, content, private))
         db.session.commit()
 
     @classmethod
-    def update(cls, id, title, question, answer):
+    def update(cls, id, title, content, private, answer):
         question = cls.query.get(id)
         question.title = title
-        question.question = question
+        question.content = content
+        question.private = private
         question.answer = answer
         db.session.commit()
 
