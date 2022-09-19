@@ -3,7 +3,8 @@ import { createStore } from 'vuex';
 const store = createStore({
     state() {
         return {
-            column_num: 3
+            columnNum: 3,
+            updateFlag: 0,
         }
     },
     mutations: {
@@ -12,6 +13,9 @@ const store = createStore({
         },
         updateAlarmCount(state, count) {
             state.alarmCount = count
+        },
+        updateQuestion(state) {
+            state.updateFlag++;
         }
     }
 })

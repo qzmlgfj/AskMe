@@ -33,3 +33,13 @@ def answer_question():
         return jsonify({"status": "ok"})
     except Exception as e:
         return jsonify({"status": "fail"})
+
+# 删除问题
+@question_bp.route("delete", methods=["POST"])
+def delete_question():
+    try:
+        data = request.get_json()
+        Question.delete(data["id"])
+        return jsonify({"status": "ok"})
+    except Exception as e:
+        return jsonify({"status": "fail"})

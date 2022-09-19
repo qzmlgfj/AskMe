@@ -4,16 +4,26 @@
       footer: 'soft'
     }">
         <template #header-extra>
-            <n-button text strong @click="switchAnswer">
-                <template #icon>
-                    <n-icon>
-                        <key />
-                    </n-icon>
-                </template>
-                查看答案
-            </n-button>
+            <n-space>
+                <n-button text strong @click="switchAnswer">
+                    <template #icon>
+                        <n-icon>
+                            <key />
+                        </n-icon>
+                    </template>
+                    查看答案
+                </n-button>
+                <n-button text strong @click="handleDelete">
+                    <template #icon>
+                        <n-icon>
+                            <circle-x />
+                        </n-icon>
+                    </template>
+                    删除问题
+                </n-button>
+            </n-space>
         </template>
-        {{argv.content}} 
+        {{argv.content}}
         <br>
         <br>
         <n-time :time="argv.created_at"></n-time>
@@ -37,30 +47,39 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { NCard, NButton, NIcon, NEmpty, NTime, } from "naive-ui";
-import { Key, Activity } from "@vicons/tabler"
+import { ref, inject } from "vue";
+import { NCard, NSpace, NButton, NIcon, NEmpty, NTime, } from "naive-ui";
+import { Key, Activity, CircleX } from "@vicons/tabler"
 
 export default {
     name: 'QuestionCard',
     props: ["argv"],
     components: {
         NCard,
+        NSpace,
         NButton,
         NIcon,
         NEmpty,
         NTime,
         Key,
-        Activity
+        Activity,
+        CircleX
     },
-    setup() {
+    setup(props) {
         const showAnswer = ref(false);
         const switchAnswer = () => {
             showAnswer.value = !showAnswer.value;
         };
+
+        const deleteQuestion = inject("handleDelete");
+        const handleDelete = () => {
+            deleteQuestion(props.argv.id);
+        };
+
         return {
             showAnswer,
-            switchAnswer
+            switchAnswer,
+            handleDelete
         }
     }
 }

@@ -8,7 +8,9 @@
                 </n-layout-header>
                 <n-scrollbar style="max-height: 90vh;">
                     <n-layout-content>
-                        <main-content></main-content>
+                        <n-message-provider>
+                            <main-content></main-content>
+                        </n-message-provider>
                     </n-layout-content>
                     <n-layout-footer bordered>
                         <foot-bar></foot-bar>

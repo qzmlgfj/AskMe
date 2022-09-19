@@ -1,9 +1,11 @@
 <script>
-import Column from './Column.vue';
-import { ref, computed } from 'vue';
+import { ref, computed, provide } from 'vue';
 import { useStore } from "vuex";
+import { useMessage } from 'naive-ui';
 
-import { getAllQuestions } from "@/utils/request";
+import Column from './Column.vue';
+
+import { getAllQuestions, deleteQuestion } from "@/utils/request";
 
 export default {
     name: 'MainContent',
@@ -12,8 +14,10 @@ export default {
     },
     setup() {
         const store = useStore();
-        const column_num = computed(() => store.state.column_num);
+        const column_num = computed(() => store.state.columnNum);
         const column_lst = ref([]);
+        const updateFlag = computed(() => store.state.updateFlag);
+        const message = useMessage();
 
         // 将数据分散到不同的column中
         const distribute_data = function (question_data) {
@@ -37,13 +41,28 @@ export default {
             })
         }
 
+        const handleDelete = function (id) {
+            deleteQuestion({ id: id }).then(res => {
+                console.log(res);
+                if (res.data.status == "ok") {
+                    message.success("删除成功");
+                    store.commit("updateQuestion");
+                } else {
+                    message.error("删除失败");
+                }
+            })
+        }
+
+        provide("handleDelete", handleDelete);
+
         getData();
 
         return {
             column_num,
             column_lst,
+            updateFlag,
             distribute_data,
-            getData
+            getData,
         }
     },
     render() {
@@ -61,6 +80,12 @@ export default {
         column_num: {
             handler: function () {
                 this.distribute_data();
+            },
+            deep: true,
+        },
+        updateFlag: {
+            handler: function () {
+                this.getData();
             },
             deep: true,
         }
