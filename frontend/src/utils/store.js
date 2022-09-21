@@ -8,11 +8,8 @@ const store = createStore({
         }
     },
     mutations: {
-        changeTheme(state) {
-            state.darkMode = state.darkMode == false ? true : false
-        },
         updateAlarmCount(state, count) {
-            state.alarmCount = count
+            state.alarmCount = count;
         },
         updateQuestion(state) {
             state.updateFlag++;

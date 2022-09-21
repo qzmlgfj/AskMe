@@ -20,9 +20,12 @@ def return_unanswered_questions():
 # 提交问题
 @question_bp.route("add", methods=["POST"])
 def add_question():
-    data = request.get_json()
-    Question.add(data["title"], data["content"], data["private"])
-    return jsonify({"status": "ok"})
+    try:
+        data = request.get_json()
+        Question.add(data["title"], data["content"], data["private"])
+        return jsonify({"status": "ok"})
+    except Exception as e:
+        return jsonify({"status": "error"})
 
 # 回答问题
 @question_bp.route("answer", methods=["POST"])
