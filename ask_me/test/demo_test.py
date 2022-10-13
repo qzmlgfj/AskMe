@@ -43,3 +43,11 @@ class QuestionTest(unittest.TestCase):
 
         ret = self.app.test_client().get("/api/question/all")
         self.assertEqual(ret.get_json()[0]["answer"], "This is an answer")
+
+    def test_get_all_question(self):
+        ret = self.app.test_client().get("/api/question/all")
+        logger.debug(ret.get_json())
+
+    def test_get_unanswered_question(self):
+        ret = self.app.test_client().get("/api/question/unanswered")
+        logger.debug(ret.get_json())

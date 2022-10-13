@@ -58,7 +58,7 @@ class Question(db.Model):
 
     @classmethod
     def get_unanswered(cls):
-        return cls.query.filter_by(answered=False).order_by(cls.created_at.desc())
+        return cls.query.filter_by(answered=False).order_by(cls.created_at.desc()).all()
 
     @classmethod
     def answer_question(cls, id, answer):

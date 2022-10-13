@@ -14,6 +14,13 @@ function getAllQuestions() {
     })
 }
 
+function getUnansweredQuestions() {
+    return service({
+        method: "get",
+        url: "/api/question/unanswered",
+    })
+}
+
 function addQuestion(data) {
     return service({
         method: "post",
@@ -30,4 +37,4 @@ function deleteQuestion(data) {
     })
 }
 
-export { getVersion, getAllQuestions, addQuestion, deleteQuestion };
+export { getVersion, getAllQuestions, getUnansweredQuestions, addQuestion, deleteQuestion };

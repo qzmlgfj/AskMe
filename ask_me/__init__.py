@@ -4,9 +4,10 @@ from flask import Flask, render_template, send_from_directory
 from flask_cors import CORS
 import logging
 
-from .extensions import db
+from .extensions import db, login_manager
 
 from .blueprint.question_blueprint import question_bp
+from .blueprint.auth_blueprint import auth_bp
 
 __version__ = "0.0.1"
 
@@ -71,6 +72,7 @@ def create_app(*, is_test=False):
     check_table_exists(app)
 
     app.register_blueprint(question_bp)
+    app.register_blueprint(auth_bp)
 
     return app
 
@@ -78,6 +80,7 @@ def create_app(*, is_test=False):
 def register_extensions(app):
     """Register Flask extensions."""
     db.init_app(app)
+    login_manager.init_app(app)
 
 def check_table_exists(app):
     with app.app_context():

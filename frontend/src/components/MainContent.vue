@@ -5,7 +5,7 @@ import { useMessage } from 'naive-ui';
 
 import Column from './Column.vue';
 
-import { getAllQuestions, deleteQuestion } from "@/utils/request";
+import { getAllQuestions, getUnansweredQuestions, deleteQuestion } from "@/utils/request";
 
 export default {
     name: 'MainContent',
@@ -18,6 +18,9 @@ export default {
         const column_lst = ref([]);
         const updateFlag = computed(() => store.state.updateFlag);
         const message = useMessage();
+        const currentUser = computed(() => store.state.userName);
+
+        const getQuestions = currentUser.value == "" ? getUnansweredQuestions : getAllQuestions;
 
         // 将数据分散到不同的column中
         const distribute_data = function (question_data) {
@@ -31,7 +34,7 @@ export default {
         }
 
         const getData = function () {
-            getAllQuestions().then((res) => {
+            getQuestions().then((res) => {
                 let question_data = res.data;
                 question_data.map((item) => {
                     item.created_at = new Date(item.created_at);
@@ -89,7 +92,7 @@ export default {
             },
             deep: true,
         }
-    }
+    },
 }
 </script>
 
