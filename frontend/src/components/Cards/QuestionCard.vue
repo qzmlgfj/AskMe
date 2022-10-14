@@ -13,14 +13,24 @@
                     </template>
                     查看答案
                 </n-button>
-                <n-button text strong @click="show">
-                    <template #icon>
-                        <n-icon>
-                            <circle-x />
-                        </n-icon>
-                    </template>
-                    删除问题
-                </n-button>
+                <div v-if="ifLogin">
+                    <n-button text strong @click="show">
+                        <template #icon>
+                            <n-icon>
+                                <circle-x />
+                            </n-icon>
+                        </template>
+                        删除问题
+                    </n-button>
+                    <n-button text strong @click="show">
+                        <template #icon>
+                            <n-icon>
+                                <pencil />
+                            </n-icon>
+                        </template>
+                        编辑问题
+                    </n-button>
+                </div>
             </n-space>
         </template>
         {{argv.content}}
@@ -49,9 +59,10 @@
 </template>
 
 <script>
-import { ref, inject } from "vue";
+import { ref, inject, computed } from "vue";
+import { useStore } from "vuex";
 import { NCard, NSpace, NButton, NIcon, NEmpty, NTime, NModal } from "naive-ui";
-import { Key, Activity, CircleX } from "@vicons/tabler"
+import { Key, Activity, CircleX, Pencil } from "@vicons/tabler"
 
 export default {
     name: 'QuestionCard',
@@ -66,12 +77,15 @@ export default {
         NModal,
         Key,
         Activity,
-        CircleX
+        CircleX,
+        Pencil
     },
     setup(props) {
+        const store = useStore();
         const showAnswer = ref(false);
         const showModal = ref(false);
         const deleteQuestion = inject("handleDelete");
+        const ifLogin = computed(() => store.state.userName != "");
 
         const switchAnswer = () => {
             showAnswer.value = !showAnswer.value;
@@ -96,6 +110,7 @@ export default {
 
         return {
             showAnswer,
+            ifLogin,
             switchAnswer,
             showModal,
             handleDelete,

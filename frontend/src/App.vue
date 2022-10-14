@@ -16,14 +16,14 @@
                         <foot-bar></foot-bar>
                     </n-layout-footer>
                 </n-scrollbar>
-                <n-button id="add-btn" circle strong type="info" size="large" @click="showModal = true">
+                <n-button id="add-btn" circle strong type="info" size="large" @click="showAddQuestionModal">
                     <template #icon>
                         <playlist-add></playlist-add>
                     </template>
                 </n-button>
                 <n-message-provider>
                     <n-modal v-model:show="showModal">
-                        <modal-card></modal-card>
+                        <card></card>
                     </n-modal>
                 </n-message-provider>
             </div>
@@ -49,7 +49,7 @@ import {
 
 import { PlaylistAdd } from "@vicons/tabler";
 
-import ModalCard from "./components/Cards/ModalCard.vue";
+import Card from "./components/Card.vue";
 import HeadBar from "./components/HeadBar.vue";
 import MainContent from "./components/MainContent.vue";
 import FootBar from "./components/FootBar.vue";
@@ -67,7 +67,7 @@ export default {
         PlaylistAdd,
         NMessageProvider,
         NModal,
-        ModalCard,
+        Card,
         HeadBar,
         MainContent,
         FootBar
@@ -76,6 +76,7 @@ export default {
         const isDaytime = ref(true);
         const naiveTheme = computed(() => isDaytime.value ? {} : darkTheme);
         const showModal = ref(false);
+        const cardName = ref("");
 
         const switchTheme = () => {
             isDaytime.value = !isDaytime.value;
@@ -83,6 +84,20 @@ export default {
 
         const closeModal = () => {
             showModal.value = false;
+        };
+
+        const setCardName = (name) => {
+            cardName.value = name;
+        };
+
+        const showLogin = () => {
+            setCardName("login");
+            showModal.value = true;
+        };
+
+        const showAddQuestionModal = () => {
+            setCardName("addQuestion");
+            showModal.value = true;
         };
 
         provide("switchTheme", {
@@ -94,11 +109,26 @@ export default {
             closeModal
         })
 
+        provide("cardName", {
+            cardName
+        })
+
+        provide("setCardName", {
+            setCardName
+        })
+
+        provide("showLogin", {
+            showLogin
+        })
+
         return {
             isDaytime,
             naiveTheme,
             showModal,
-            closeModal
+            closeModal,
+            cardName,
+            setCardName,
+            showAddQuestionModal
         }
     }
 }

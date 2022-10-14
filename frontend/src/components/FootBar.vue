@@ -1,12 +1,11 @@
 <template>
     <div class="foot-bar">
-        <n-text depth="3">AskMe! {{version}} · Made by Ant</n-text>
+        <n-text depth="3" @click="handleClick">AskMe! {{version}} · Made by Ant</n-text>
     </div>
 </template>
 
 <script>
 import { NText } from "naive-ui";
-
 
 import { getVersion } from "@/utils/request";
 export default {
@@ -17,6 +16,7 @@ export default {
     data() {
         return {
             version: "",
+            clickTimes: 0,
         };
     },
     mounted() {
@@ -24,6 +24,16 @@ export default {
             this.version = res.data;
         });
     },
+    inject: ["showLogin"],
+    methods: {
+        handleClick() {
+            this.clickTimes++;
+            if (this.clickTimes == 3) {
+                this.showLogin.showLogin();
+                this.clickTimes = 0;
+            }
+        }
+    }
 };
 </script>
 
