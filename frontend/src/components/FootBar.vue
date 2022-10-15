@@ -7,7 +7,7 @@
 <script>
 import { NText } from "naive-ui";
 
-import { getVersion } from "@/utils/request";
+import { getVersion, checkAdminExists } from "@/utils/request";
 export default {
     name: 'FooterBar',
     components: {
@@ -24,12 +24,19 @@ export default {
             this.version = res.data;
         });
     },
-    inject: ["showLogin"],
+    inject: ["showAuthModal"],
     methods: {
         handleClick() {
             this.clickTimes++;
+            const { showAuthModal } = this.showAuthModal;
             if (this.clickTimes == 3) {
-                this.showLogin.showLogin();
+                checkAdminExists().then((res) => {
+                    if (res.data.status == "no") {
+                        showAuthModal("register");
+                    } else {
+                        showAuthModal("login");
+                    }
+                });
                 this.clickTimes = 0;
             }
         }

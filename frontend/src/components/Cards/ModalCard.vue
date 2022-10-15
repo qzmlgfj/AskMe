@@ -3,7 +3,7 @@
         footer-style="display:flex;justify-content:space-around;" :segmented="{content: true}" closable
         @close="closeModal">
         <n-space vertical>
-            <n-form ref="formRef" :model="formValue">
+            <n-form :model="formValue">
                 <n-form-item label="标题" path="question.title">
                     <n-input v-model:value="formValue.question.title" placeholder="输入问题标题" />
                 </n-form-item>
@@ -55,7 +55,6 @@ export default {
 
         const handleAddQuestion = function () {
             addQuestion(formValue.value.question).then(res => {
-                console.log(res)
                 if (res.data.status == "ok") {
                     message.success("添加成功");
                     closeModal();

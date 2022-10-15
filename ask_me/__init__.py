@@ -4,7 +4,7 @@ from flask import Flask, render_template, send_from_directory
 from flask_cors import CORS
 import logging
 
-from .extensions import db, login_manager
+from .extensions import db
 
 from .blueprint.question_blueprint import question_bp
 from .blueprint.auth_blueprint import auth_bp
@@ -80,7 +80,6 @@ def create_app(*, is_test=False):
 def register_extensions(app):
     """Register Flask extensions."""
     db.init_app(app)
-    login_manager.init_app(app)
 
 def check_table_exists(app):
     with app.app_context():

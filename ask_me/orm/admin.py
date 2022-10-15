@@ -1,10 +1,9 @@
-from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from ..extensions import db, login_manager
+from ..extensions import db
 
 
-class Admin(UserMixin, db.Model):
+class Admin(db.Model):
     id: int
     username: str
     password_hash: str  # 密码Hash值
@@ -44,8 +43,8 @@ class Admin(UserMixin, db.Model):
         admin = cls.query.filter_by(username=username).first()
         if admin is None:
             return False
-        return check_password_hash(admin.password, password)
+        return check_password_hash(admin.password_hash, password)
 
-@login_manager.user_loader
-def load_user(user_id):
-    return Admin.query.get(user_id)
+    @classmethod
+    def check_admin_exists(cls):
+        return cls.query.first() is not None

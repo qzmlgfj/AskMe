@@ -3,21 +3,21 @@
         footer-style="display:flex;justify-content:space-around;" :segmented="{content: true}" closable
         @close="closeModal">
         <n-space vertical>
-            <n-form ref="formRef" :model="formValue">
+            <n-form :model="formValue">
                 <n-form-item label="用户名" path="user.userName">
-                    <n-input v-model:value="formValue.user.userName" placeholder="输入用户名" />
+                    <n-input v-model:value="formValue.user.username" placeholder="输入用户名" />
                 </n-form-item>
                 <n-form-item label="密码" path="user.password">
                     <n-input v-model:value="formValue.user.password" type="password" show-password-on="click"
                         placeholder="输入密码" />
                 </n-form-item>
                 <n-form-item path="user.rememberMe">
-                    <n-checkbox v-model:checked="formValue.user.rememberMe">记住我</n-checkbox>
+                    <n-checkbox v-model:checked="formValue.user.remember">记住我</n-checkbox>
                 </n-form-item>
             </n-form>
         </n-space>
         <template #footer>
-            <n-button type="primary" @click="handleAddQuestion">快端上来罢</n-button>
+            <n-button type="primary" @click="handleLogin">快端上来罢</n-button>
             <n-button type="default" @click="closeModal">待会再说罢</n-button>
         </template>
     </n-card>
@@ -29,7 +29,7 @@ import { useStore } from "vuex";
 
 import { NCard, NSpace, NForm, NFormItem, NInput, NCheckbox, NButton, useMessage } from "naive-ui";
 
-import { addQuestion } from "@/utils/request"
+import { login } from "../../utils/request";
 
 export default {
     name: "ModalCard",
@@ -46,23 +46,23 @@ export default {
         const { closeModal } = inject("closeModal");
         const formValue = ref({
             user: {
-                userName: "",
+                username: "",
                 password: "",
-                rememberMe: false,
+                remember: false,
             }
         })
         const message = useMessage();
         const store = useStore();
 
-        const handleAddQuestion = function () {
-            addQuestion(formValue.value.question).then(res => {
+        const handleLogin = function () {
+            login(formValue.value.user).then(res => {
                 console.log(res)
                 if (res.data.status == "ok") {
-                    message.success("添加成功");
+                    message.success("登录成功");
+                    store.commit("setUserName", formValue.value.user.username);
                     closeModal();
-                    store.commit("updateQuestion");
                 } else {
-                    message.error("添加失败");
+                    message.error("登录失败");
                 }
             })
         }
@@ -70,7 +70,7 @@ export default {
         return {
             closeModal,
             formValue,
-            handleAddQuestion
+            handleLogin
         };
     }
 };

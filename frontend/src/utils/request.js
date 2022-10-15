@@ -37,4 +37,44 @@ function deleteQuestion(data) {
     })
 }
 
-export { getVersion, getAllQuestions, getUnansweredQuestions, addQuestion, deleteQuestion };
+function login(data) {
+    return service({
+        method: "POST",
+        url: "/api/auth/login",
+        data: data,
+    })
+}
+
+function register(data) {
+    return service({
+        method: "POST",
+        url: "/api/auth/register",
+        data: data,
+    })
+}
+
+function getCurrentUser() {
+    return service({
+        method: "GET",
+        url: "/api/auth/currentuser",
+    })
+}
+
+function checkAdminExists() {
+    return service({
+        method: "GET",
+        url: "/api/auth/checkadmin",
+    })
+}
+
+export {
+    getVersion,
+    getAllQuestions,
+    getUnansweredQuestions,
+    addQuestion,
+    deleteQuestion,
+    login,
+    register,
+    getCurrentUser,
+    checkAdminExists,
+};

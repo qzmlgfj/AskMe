@@ -33,6 +33,7 @@
 
 <script>
 import { ref, computed, provide } from "vue";
+// import { useStore } from "vuex";
 
 import {
     NLayout,
@@ -53,6 +54,8 @@ import Card from "./components/Card.vue";
 import HeadBar from "./components/HeadBar.vue";
 import MainContent from "./components/MainContent.vue";
 import FootBar from "./components/FootBar.vue";
+
+// import { getCurrentUser } from "@/utils/request";
 
 export default {
     name: 'App',
@@ -90,8 +93,8 @@ export default {
             cardName.value = name;
         };
 
-        const showLogin = () => {
-            setCardName("login");
+        const showAuthModal = (modalName) => {
+            setCardName(modalName);
             showModal.value = true;
         };
 
@@ -117,8 +120,8 @@ export default {
             setCardName
         })
 
-        provide("showLogin", {
-            showLogin
+        provide("showAuthModal", {
+            showAuthModal
         })
 
         return {

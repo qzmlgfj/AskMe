@@ -3,6 +3,7 @@ import { inject } from "vue";
 
 import ModalCard from "./Cards/ModalCard.vue";
 import LoginCard from "./Cards/LoginCard.vue";
+import RegisterCard from "./Cards/RegisterCard.vue";
 
 export default {
     name: "Modal",
@@ -19,6 +20,8 @@ export default {
                     return <LoginCard />;
                 case "addQuestion":
                     return <ModalCard />;
+                case "register":
+                    return <RegisterCard />;
             }
         };
 
