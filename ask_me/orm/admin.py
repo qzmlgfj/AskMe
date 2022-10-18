@@ -29,7 +29,7 @@ class Admin(db.Model):
     def update(cls, id, username, password):
         admin = cls.query.get(id)
         admin.username = username
-        admin.password = generate_password_hash(password)
+        admin.password_hash = generate_password_hash(password)
         db.session.commit()
 
     @classmethod
