@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from ..orm.question import Question
+from ..wrapper import token_required
 
 
 question_bp = Blueprint("/api/question", __name__, url_prefix="/api/question")
@@ -41,6 +42,7 @@ def answer_question():
 
 # 删除问题
 @question_bp.route("delete", methods=["POST"])
+@token_required
 def delete_question():
     try:
         data = request.get_json()

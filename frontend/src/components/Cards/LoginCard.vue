@@ -57,9 +57,10 @@ export default {
         const handleLogin = function () {
             login(formValue.value.user).then(res => {
                 console.log(res)
-                if (res.data.status == "ok") {
+                if (res.data.authenticated) {
                     message.success("登录成功");
                     store.commit("setUserName", formValue.value.user.username);
+                    localStorage.setItem("token", res.data.token);
                     closeModal();
                 } else {
                     message.error("登录失败");

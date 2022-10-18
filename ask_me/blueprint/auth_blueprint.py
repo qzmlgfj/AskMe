@@ -1,6 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Blueprint, jsonify, request, current_app
 import jwt
+
 
 from ..orm.admin import Admin
 
@@ -19,13 +20,15 @@ def login():
         if Admin.check(data["username"], data["password"]):
             token = jwt.encode(
                 {
-                    "iat": datetime.utcnow(),
+                    "username": data["username"],
+                    "ip": request.remote_addr,
+                    "exp": datetime.utcnow() + timedelta(minutes=30),
                 },
                 current_app.config["SECRET_KEY"],
             )
-            return jsonify({"status": "ok", "token": token})
+            return jsonify({"authenticated": True, "token": token})
         else:
-            return jsonify({"status": "fail"})
+            return jsonify({"authenticated": False})
     except Exception as e:
         print(e)
         return jsonify({"status": "fail"})
