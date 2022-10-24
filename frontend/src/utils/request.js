@@ -29,6 +29,14 @@ function addQuestion(data) {
     })
 }
 
+function answerQuestion(data) {
+    return service({
+        method: "POST",
+        url: "/api/question/answer",
+        data: data,
+    })
+}
+
 function deleteQuestion(data) {
     return service({
         method: "POST",
@@ -72,6 +80,7 @@ export {
     getAllQuestions,
     getUnansweredQuestions,
     addQuestion,
+    answerQuestion,
     deleteQuestion,
     login,
     register,

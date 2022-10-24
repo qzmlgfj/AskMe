@@ -31,6 +31,7 @@ def add_question():
 
 # 回答问题
 @question_bp.route("answer", methods=["POST"])
+@token_required
 def answer_question():
     try:
         data = request.get_json()

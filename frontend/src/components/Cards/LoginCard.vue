@@ -60,6 +60,7 @@ export default {
                 if (res.data.authenticated) {
                     message.success("登录成功");
                     store.commit("setUserName", formValue.value.user.username);
+                    store.commit("updateQuestion");
                     localStorage.setItem("token", res.data.token);
                     closeModal();
                 } else {

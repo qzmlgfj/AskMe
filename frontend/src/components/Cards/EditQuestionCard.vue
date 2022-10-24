@@ -1,5 +1,5 @@
 <template>
-    <n-card style="width: 800px" title="开始整蛊" :bordered="false" size="huge" role="dialog" aria-modal="true"
+    <n-card style="width: 500px" title="修改提问" :bordered="false" size="huge" role="dialog" aria-modal="true"
         footer-style="display:flex;justify-content:space-around;" :segmented="{content: true}" closable
         @close="closeModal">
         <n-space vertical>

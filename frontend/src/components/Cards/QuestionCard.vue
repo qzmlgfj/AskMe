@@ -14,22 +14,24 @@
                     查看答案
                 </n-button>
                 <div v-if="ifLogin">
-                    <n-button text strong @click="show">
-                        <template #icon>
-                            <n-icon>
-                                <circle-x />
-                            </n-icon>
-                        </template>
-                        删除问题
-                    </n-button>
-                    <n-button text strong @click="show">
-                        <template #icon>
-                            <n-icon>
-                                <pencil />
-                            </n-icon>
-                        </template>
-                        编辑问题
-                    </n-button>
+                    <n-space>
+                        <n-button v-if="!argv.answered" text strong @click="handleAnswerQuestion">
+                            <template #icon>
+                                <n-icon>
+                                    <cone />
+                                </n-icon>
+                            </template>
+                            回答问题
+                        </n-button>
+                        <n-button text strong @click="handleEditQuestion">
+                            <template #icon>
+                                <n-icon>
+                                    <pencil />
+                                </n-icon>
+                            </template>
+                            编辑问题
+                        </n-button>
+                    </n-space>
                 </div>
             </n-space>
         </template>
@@ -62,7 +64,7 @@
 import { ref, inject, computed } from "vue";
 import { useStore } from "vuex";
 import { NCard, NSpace, NButton, NIcon, NEmpty, NTime, NModal } from "naive-ui";
-import { Key, Activity, CircleX, Pencil } from "@vicons/tabler"
+import { Key, Activity, Cone, Pencil } from "@vicons/tabler"
 
 export default {
     name: 'QuestionCard',
@@ -77,7 +79,7 @@ export default {
         NModal,
         Key,
         Activity,
-        CircleX,
+        Cone,
         Pencil
     },
     setup(props) {
@@ -85,6 +87,8 @@ export default {
         const showAnswer = ref(false);
         const showModal = ref(false);
         const deleteQuestion = inject("handleDelete");
+        const { showAnswerQuestionModal } = inject("showAnswerQuestionModal");
+        const { showEditQuestionModal } = inject("showEditQuestionModal");
         const ifLogin = computed(() => store.state.userName != "");
 
         const switchAnswer = () => {
@@ -108,6 +112,14 @@ export default {
             showModal.value = false;
         };
 
+        const handleAnswerQuestion = () => {
+            showAnswerQuestionModal(props.argv.id);
+        };
+
+        const handleEditQuestion = () => {
+            showEditQuestionModal(props.argv.id);
+        };
+
         return {
             showAnswer,
             ifLogin,
@@ -116,7 +128,9 @@ export default {
             handleDelete,
             show,
             submitCallback,
-            cancelCallback
+            cancelCallback,
+            handleAnswerQuestion,
+            handleEditQuestion
         }
     }
 }

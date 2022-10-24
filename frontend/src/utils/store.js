@@ -5,7 +5,8 @@ const store = createStore({
         return {
             columnNum: 3,
             updateFlag: 0,
-            userName: ""
+            userName: "",
+            currentQuestionID: 0,
         }
     },
     mutations: {
@@ -20,6 +21,9 @@ const store = createStore({
         },
         clearUserName(state) {
             state.userName = "";
+        },
+        setCurrentQuestionID(state, id) {
+            state.currentQuestionID = id;
         }
     }
 })

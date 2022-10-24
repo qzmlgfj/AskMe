@@ -1,15 +1,20 @@
 <script>
 import { inject } from "vue";
 
-import ModalCard from "./Cards/ModalCard.vue";
+import AddQuestionCard from "./Cards/AddQuestionCard.vue";
+import AnswerQuestionCard from "./Cards/AnswerQuestionCard.vue";
+import EditQuestionCard from "./Cards/EditQuestionCard.vue";
 import LoginCard from "./Cards/LoginCard.vue";
 import RegisterCard from "./Cards/RegisterCard.vue";
+
 
 export default {
     name: "Modal",
     components: {
-        ModalCard,
+        AddQuestionCard,
         LoginCard,
+        RegisterCard,
+        AnswerQuestionCard
     },
     setup() {
         const { cardName } = inject("cardName");
@@ -19,9 +24,13 @@ export default {
                 case "login":
                     return <LoginCard />;
                 case "addQuestion":
-                    return <ModalCard />;
+                    return <AddQuestionCard />;
                 case "register":
                     return <RegisterCard />;
+                case "answerQuestion":
+                    return <AnswerQuestionCard />;
+                case "modifyQuestion":
+                    return <EditQuestionCard />;
             }
         };
 

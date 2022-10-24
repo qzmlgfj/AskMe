@@ -1,6 +1,5 @@
 <template>
     <n-config-provider :theme="naiveTheme">
-
         <n-layout>
             <div id="container">
                 <n-layout-header bordered>
@@ -33,7 +32,7 @@
 
 <script>
 import { ref, computed, provide } from "vue";
-// import { useStore } from "vuex";
+import { useStore } from "vuex";
 
 import {
     NLayout,
@@ -80,6 +79,7 @@ export default {
         const naiveTheme = computed(() => isDaytime.value ? {} : darkTheme);
         const showModal = ref(false);
         const cardName = ref("");
+        const store = useStore();
 
         const switchTheme = () => {
             isDaytime.value = !isDaytime.value;
@@ -103,6 +103,18 @@ export default {
             showModal.value = true;
         };
 
+        const showAnswerQuestionModal = (id) => {
+            store.commit("setCurrentQuestionID", id);
+            setCardName("answerQuestion");
+            showModal.value = true;
+        };
+
+        const showEditQuestionModal = (id) => {
+            store.commit("setCurrentQuestionID", id);
+            setCardName("modifyQuestion");
+            showModal.value = true;
+        };
+
         provide("switchTheme", {
             isDaytime,
             switchTheme,
@@ -122,6 +134,14 @@ export default {
 
         provide("showAuthModal", {
             showAuthModal
+        })
+
+        provide("showAnswerQuestionModal", {
+            showAnswerQuestionModal
+        })
+
+        provide("showEditQuestionModal", {
+            showEditQuestionModal
         })
 
         return {
