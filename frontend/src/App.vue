@@ -103,14 +103,14 @@ export default {
             showModal.value = true;
         };
 
-        const showAnswerQuestionModal = (id) => {
-            store.commit("setCurrentQuestionID", id);
+        const showAnswerQuestionModal = (question) => {
+            store.commit("setCurrentQuestion", question);
             setCardName("answerQuestion");
             showModal.value = true;
         };
 
-        const showEditQuestionModal = (id) => {
-            store.commit("setCurrentQuestionID", id);
+        const showEditQuestionModal = (question) => {
+            store.commit("setCurrentQuestion", question);
             setCardName("modifyQuestion");
             showModal.value = true;
         };

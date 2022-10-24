@@ -3,7 +3,7 @@
         footer-style="display:flex;justify-content:space-around;" :segmented="{content: true}" closable
         @close="closeModal">
         <n-space vertical>
-            <n-form :model="formValue">
+            <n-form ref="formRef" :model="formValue" :rules="rules">
                 <n-form-item label="回答" path="answer.content">
                     <n-input v-model:value="formValue.answer.content" type="textarea" placeholder="开始辱骂" />
                 </n-form-item>
@@ -36,33 +36,56 @@ export default {
     },
     setup() {
         const { closeModal } = inject("closeModal");
+        const message = useMessage();
+        const store = useStore();
+
+        const formRef = ref(null);
         const formValue = ref({
             answer: {
                 content: "",
             }
         })
-        const message = useMessage();
-        const store = useStore();
 
-        const handleAnswerQuestion = function () {
-            const params = {
-                id: store.state.currentQuestionID,
-                answer: formValue.value.answer.content
-            }
-            answerQuestion(params).then(res => {
-                if (res.data.status == "ok") {
-                    message.success("回复成功");
-                    closeModal();
-                    store.commit("updateQuestion");
-                } else {
-                    message.error("回复失败");
+        const rules = {
+            answer: {
+                content: [
+                    {
+                        required: true,
+                        message: "回答不能为空",
+                        trigger: "blur"
+                    },
+                ],
+            },
+        };
+
+        const handleAnswerQuestion = function (e) {
+            e.preventDefault();
+            formRef.value?.validate((errors) => {
+                const params = {
+                    id: store.state.currentQuestion.id,
+                    answer: formValue.value.answer.content
                 }
-            })
+                if (!errors) {
+                    answerQuestion(params).then(res => {
+                        if (res.data.status == "ok") {
+                            message.success("回复成功");
+                            closeModal();
+                            store.commit("updateQuestion");
+                        } else {
+                            message.error("回复失败");
+                        }
+                    })
+                } else {
+                    message.error("请检查输入");
+                }
+            });
         }
 
         return {
             closeModal,
+            formRef,
             formValue,
+            rules,
             handleAnswerQuestion
         };
     }

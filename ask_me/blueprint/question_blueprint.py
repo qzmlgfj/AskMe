@@ -17,6 +17,10 @@ def return_all_questions():
 def return_unanswered_questions():
     return jsonify(Question.get_unanswered())
 
+# 查看指定id问题
+@question_bp.route("<int:question_id>", methods=["GET"])
+def return_question(question_id):
+    return jsonify(Question.get_by_id(question_id))
 
 # 提交问题
 @question_bp.route("add", methods=["POST"])
@@ -26,7 +30,7 @@ def add_question():
         Question.add(data["title"], data["content"], data["private"])
         return jsonify({"status": "ok"})
     except Exception as e:
-        return jsonify({"status": "error"})
+        return jsonify({"status": "fail"})
 
 
 # 回答问题
@@ -48,6 +52,17 @@ def delete_question():
     try:
         data = request.get_json()
         Question.delete(data["id"])
+        return jsonify({"status": "ok"})
+    except Exception as e:
+        return jsonify({"status": "fail"})
+
+# 修改问题
+@question_bp.route("edit", methods=["POST"])
+@token_required
+def edit_question():
+    try:
+        data = request.get_json()
+        Question.update(data["id"], data["title"], data["content"], data["private"], data["answer"])
         return jsonify({"status": "ok"})
     except Exception as e:
         return jsonify({"status": "fail"})

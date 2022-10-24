@@ -7,6 +7,14 @@
             <n-text>{{poetry}}</n-text>
         </n-popover>
         <n-space>
+            <n-button quaternary @click="handleRefresh" size="large">
+                <template #icon>
+                    <n-icon>
+                        <refresh />
+                    </n-icon>
+                </template>
+                刷新
+            </n-button>
             <n-button quaternary @click="switchTheme" size="large">
                 <template #icon>
                     <n-icon>
@@ -31,7 +39,7 @@
 <script>
 import { inject, computed } from "vue";
 import { NH1, NPopover, NText, NSpace, NButton, NIcon } from "naive-ui";
-import { BrandGithub, Sun, Moon } from "@vicons/tabler";
+import { Refresh, BrandGithub, Sun, Moon } from "@vicons/tabler";
 
 const jinrishici = require('jinrishici');
 
@@ -44,6 +52,7 @@ export default {
         NSpace,
         NButton,
         NIcon,
+        Refresh,
         BrandGithub,
         Sun,
         Moon
@@ -70,6 +79,9 @@ export default {
                     this.poetry = result.data.content;
                 });
             }
+        },
+        handleRefresh() {
+            this.$store.commit("updateQuestion");
         }
     },
     created() {

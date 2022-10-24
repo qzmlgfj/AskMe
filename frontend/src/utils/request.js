@@ -45,6 +45,14 @@ function deleteQuestion(data) {
     })
 }
 
+function editQuestion(data) {
+    return service({
+        method: "POST",
+        url: "/api/question/edit",
+        data: data,
+    })
+}
+
 function login(data) {
     return service({
         method: "POST",
@@ -82,6 +90,7 @@ export {
     addQuestion,
     answerQuestion,
     deleteQuestion,
+    editQuestion,
     login,
     register,
     getCurrentUser,

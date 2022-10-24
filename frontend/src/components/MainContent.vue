@@ -1,11 +1,10 @@
 <script>
-import { ref, computed, provide } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from "vuex";
-import { useMessage } from 'naive-ui';
 
 import Column from './Column.vue';
 
-import { getAllQuestions, deleteQuestion } from "@/utils/request";
+import { getAllQuestions } from "@/utils/request";
 
 export default {
     name: 'MainContent',
@@ -17,7 +16,6 @@ export default {
         const column_num = computed(() => store.state.columnNum);
         const column_lst = ref([]);
         const updateFlag = computed(() => store.state.updateFlag);
-        const message = useMessage();
         // const currentUser = computed(() => store.state.userName);
 
         // 将数据分散到不同的column中
@@ -45,19 +43,19 @@ export default {
             })
         }
 
-        const handleDelete = function (id) {
-            deleteQuestion({ id: id }).then(res => {
-                console.log(res);
-                if (res.data.status == "ok") {
-                    message.success("删除成功");
-                    store.commit("updateQuestion");
-                } else {
-                    message.error("删除失败");
-                }
-            })
-        }
+        // const handleDelete = function (id) {
+        //     deleteQuestion({ id: id }).then(res => {
+        //         console.log(res);
+        //         if (res.data.status == "ok") {
+        //             message.success("删除成功");
+        //             store.commit("updateQuestion");
+        //         } else {
+        //             message.error("删除失败");
+        //         }
+        //     })
+        // }
 
-        provide("handleDelete", handleDelete);
+        // provide("handleDelete", handleDelete);
 
         getData();
 

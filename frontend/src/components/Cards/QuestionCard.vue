@@ -55,15 +55,13 @@
                 </n-empty>
             </div>
         </template>
-        <n-modal v-model:show="showModal" preset="dialog" title="确认" content="你确认?" positive-text="确认"
-            negative-text="算了" @positive-click="submitCallback" @negative-click="cancelCallback" />
     </n-card>
 </template>
 
 <script>
 import { ref, inject, computed } from "vue";
 import { useStore } from "vuex";
-import { NCard, NSpace, NButton, NIcon, NEmpty, NTime, NModal } from "naive-ui";
+import { NCard, NSpace, NButton, NIcon, NEmpty, NTime } from "naive-ui";
 import { Key, Activity, Cone, Pencil } from "@vicons/tabler"
 
 export default {
@@ -76,7 +74,6 @@ export default {
         NIcon,
         NEmpty,
         NTime,
-        NModal,
         Key,
         Activity,
         Cone,
@@ -85,8 +82,6 @@ export default {
     setup(props) {
         const store = useStore();
         const showAnswer = ref(false);
-        const showModal = ref(false);
-        const deleteQuestion = inject("handleDelete");
         const { showAnswerQuestionModal } = inject("showAnswerQuestionModal");
         const { showEditQuestionModal } = inject("showEditQuestionModal");
         const ifLogin = computed(() => store.state.userName != "");
@@ -95,40 +90,18 @@ export default {
             showAnswer.value = !showAnswer.value;
         };
 
-        const handleDelete = () => {
-            deleteQuestion(props.argv.id);
-        };
-
-        const show = () => {
-            showModal.value = true;
-        };
-
-        const submitCallback = () => {
-            handleDelete();
-            showModal.value = false;
-        };
-
-        const cancelCallback = () => {
-            showModal.value = false;
-        };
-
         const handleAnswerQuestion = () => {
-            showAnswerQuestionModal(props.argv.id);
+            showAnswerQuestionModal(props.argv);
         };
 
         const handleEditQuestion = () => {
-            showEditQuestionModal(props.argv.id);
+            showEditQuestionModal(props.argv);
         };
 
         return {
             showAnswer,
             ifLogin,
             switchAnswer,
-            showModal,
-            handleDelete,
-            show,
-            submitCallback,
-            cancelCallback,
             handleAnswerQuestion,
             handleEditQuestion
         }

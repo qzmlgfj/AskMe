@@ -17,8 +17,8 @@ class Question(db.Model):
     answered_at: datetime
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.Text)
-    content = db.Column(db.Text)
+    title = db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime)
     private = db.Column(db.Boolean, default=False)
 
@@ -55,6 +55,10 @@ class Question(db.Model):
     @classmethod
     def get_all(cls):
         return cls.query.order_by(cls.created_at.desc()).all()
+
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.get(id)
 
     @classmethod
     def get_unanswered(cls):

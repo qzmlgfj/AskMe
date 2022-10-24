@@ -3,7 +3,7 @@
         footer-style="display:flex;justify-content:space-around;" :segmented="{content: true}" closable
         @close="closeModal">
         <n-space vertical>
-            <n-form :model="formValue">
+            <n-form ref="formRef" :model="formValue" :rules="rules">
                 <n-form-item label="用户名" path="user.userName">
                     <n-input v-model:value="formValue.user.username" placeholder="输入用户名" />
                 </n-form-item>
@@ -43,6 +43,9 @@ export default {
     },
     setup() {
         const { closeModal } = inject("closeModal");
+        const message = useMessage();
+
+        const formRef = ref(null);
         const formValue = ref({
             user: {
                 username: "",
@@ -50,23 +53,63 @@ export default {
                 repassword: "",
             }
         })
-        const message = useMessage();
 
-        const handleRegister = function () {
-            register(formValue.value.user).then(res => {
-                console.log(res)
-                if (res.data.status == "ok") {
-                    message.success("注册成功");
-                    closeModal();
+        const validatePasswordSame = (rule, value) => value === formValue.value.user.password;
+
+        const rules = {
+            user: {
+                username: [
+                    {
+                        required: true,
+                        message: "用户名不能为空",
+                        trigger: "blur"
+                    },
+                ],
+                password: [
+                    {
+                        required: true,
+                        message: "内容不能为空",
+                        trigger: "blur"
+                    },
+                ],
+                repassword: [
+                    {
+                        required: true,
+                        message: "请再次输入密码",
+                        trigger: ["blur"]
+                    },
+                    {
+                        validator: validatePasswordSame,
+                        message: "两次密码输入不一致",
+                        trigger: ["blur"]
+                    }
+                ]
+            },
+        };
+
+        const handleRegister = function (e) {
+            e.preventDefault();
+            formRef.value?.validate((errors) => {
+                if (!errors) {
+                    register(formValue.value.user).then(res => {
+                        if (res.data.status == "ok") {
+                            message.success("注册成功");
+                            closeModal();
+                        } else {
+                            message.error("注册失败");
+                        }
+                    })
                 } else {
-                    message.error("注册失败");
+                    message.error("请检查输入");
                 }
-            })
+            });
         }
 
         return {
             closeModal,
+            formRef,
             formValue,
+            rules,
             handleRegister
         };
     }
