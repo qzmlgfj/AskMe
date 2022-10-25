@@ -1,0 +1,2 @@
+graft ask_me/dist
+global-exclude *.pyc
