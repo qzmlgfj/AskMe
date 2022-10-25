@@ -144,6 +144,21 @@ export default {
             showEditQuestionModal
         })
 
+        const windowWidth = ref(document.documentElement.clientWidth);
+        const windowHeight = ref(document.documentElement.clientHeight);
+
+        const handleResize = () => {
+            windowWidth.value = document.documentElement.clientWidth;
+            windowHeight.value = document.documentElement.clientHeight;
+            if (windowWidth.value < 768) {
+                store.commit("setIsMobile", true);
+            } else {
+                store.commit("setIsMobile", false);
+            }
+        }
+
+        handleResize();
+
         return {
             isDaytime,
             naiveTheme,
@@ -151,8 +166,15 @@ export default {
             closeModal,
             cardName,
             setCardName,
-            showAddQuestionModal
+            showAddQuestionModal,
+            handleResize,
         }
+    },
+    mounted() {
+        window.addEventListener("resize", this.handleResize);
+    },
+    beforeUnmount() {
+        window.removeEventListener("resize", this.handleResize);
     }
 }
 </script>

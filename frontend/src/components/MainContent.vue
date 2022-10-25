@@ -16,16 +16,17 @@ export default {
         const column_num = computed(() => store.state.columnNum);
         const column_lst = ref([]);
         const updateFlag = computed(() => store.state.updateFlag);
+        let question_data = ref(null);
         // const currentUser = computed(() => store.state.userName);
 
         // 将数据分散到不同的column中
-        const distribute_data = function (question_data) {
+        const distribute_data = function () {
             column_lst.value = [];
             for (let i = 0; i < column_num.value; i++) {
                 column_lst.value.push([]);
             }
-            for (let i = 0; i < question_data.length; i++) {
-                column_lst.value[i % column_num.value].push(question_data[i]);
+            for (let i = 0; i < question_data.value.length; i++) {
+                column_lst.value[i % column_num.value].push(question_data.value[i]);
             }
         }
 
@@ -34,8 +35,8 @@ export default {
             // const getQuestions = currentUser.value == "" ? getUnansweredQuestions : getAllQuestions;
             const getQuestions = getAllQuestions;
             getQuestions().then((res) => {
-                let question_data = res.data;
-                question_data.map((item) => {
+                question_data.value = res.data;
+                question_data.value.map((item) => {
                     item.created_at = new Date(item.created_at);
                     item.answered_at = new Date(item.answered_at);
                 });
@@ -63,6 +64,7 @@ export default {
             column_num,
             column_lst,
             updateFlag,
+            question_data,
             distribute_data,
             getData,
         }

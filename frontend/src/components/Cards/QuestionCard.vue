@@ -1,7 +1,7 @@
 <template>
     <n-card hoverable :title="argv.title" :segmented="{
-      content: true,
-      footer: 'soft'
+        content: true,
+        footer: 'soft'
     }">
         <template #header-extra>
             <n-space>
@@ -11,7 +11,7 @@
                             <key />
                         </n-icon>
                     </template>
-                    查看答案
+                    <template v-if="!isMobile">查看答案</template>
                 </n-button>
                 <div v-if="ifLogin">
                     <n-space>
@@ -21,7 +21,7 @@
                                     <cone />
                                 </n-icon>
                             </template>
-                            回答问题
+                            <template v-if="!isMobile">回答问题</template>
                         </n-button>
                         <n-button text strong @click="handleEditQuestion">
                             <template #icon>
@@ -29,19 +29,19 @@
                                     <pencil />
                                 </n-icon>
                             </template>
-                            编辑问题
+                            <template v-if="!isMobile">编辑问题</template>
                         </n-button>
                     </n-space>
                 </div>
             </n-space>
         </template>
-        {{argv.content}}
+        {{ argv.content }}
         <br>
         <br>
         <n-time :time="argv.created_at"></n-time>
         <template v-if="showAnswer" #footer>
             <div v-if="argv.answered">
-                {{argv.answer}}
+                {{ argv.answer }}
                 <br>
                 <n-time :time="argv.answered_at"></n-time>
             </div>
@@ -85,6 +85,7 @@ export default {
         const { showAnswerQuestionModal } = inject("showAnswerQuestionModal");
         const { showEditQuestionModal } = inject("showEditQuestionModal");
         const ifLogin = computed(() => store.state.userName != "");
+        const isMobile = computed(() => store.state.isMobile);
 
         const switchAnswer = () => {
             showAnswer.value = !showAnswer.value;
@@ -101,6 +102,7 @@ export default {
         return {
             showAnswer,
             ifLogin,
+            isMobile,
             switchAnswer,
             handleAnswerQuestion,
             handleEditQuestion

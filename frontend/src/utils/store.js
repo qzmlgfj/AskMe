@@ -6,7 +6,8 @@ const store = createStore({
             columnNum: 3,
             updateFlag: 0,
             userName: "",
-            currentQuestion: null
+            currentQuestion: null,
+            isMobile: false
         }
     },
     mutations: {
@@ -24,6 +25,10 @@ const store = createStore({
         },
         setCurrentQuestion(state, question) {
             state.currentQuestion = question;
+        },
+        setIsMobile(state, isMobile) {
+            state.isMobile = isMobile;
+            state.columnNum = isMobile ? 1 : 3;
         }
     }
 })

@@ -35,7 +35,7 @@ export default {
         };
 
         return {
-            selectCard
+            selectCard,
         }
     },
     render() {
