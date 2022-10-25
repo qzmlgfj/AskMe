@@ -4,7 +4,7 @@ import { useStore } from "vuex";
 
 import Column from './Column.vue';
 
-import { getAllQuestions } from "@/utils/request";
+import { getQuestions } from "@/utils/request";
 
 export default {
     name: 'MainContent',
@@ -17,7 +17,6 @@ export default {
         const column_lst = ref([]);
         const updateFlag = computed(() => store.state.updateFlag);
         let question_data = ref(null);
-        // const currentUser = computed(() => store.state.userName);
 
         // 将数据分散到不同的column中
         const distribute_data = function () {
@@ -31,10 +30,7 @@ export default {
         }
 
         const getData = function () {
-            // TODO 这一句再考虑考虑
-            // const getQuestions = currentUser.value == "" ? getUnansweredQuestions : getAllQuestions;
-            const getQuestions = getAllQuestions;
-            getQuestions().then((res) => {
+            getQuestions(store.state.queryMode).then((res) => {
                 question_data.value = res.data;
                 question_data.value.map((item) => {
                     item.created_at = new Date(item.created_at);
@@ -43,20 +39,6 @@ export default {
                 distribute_data(question_data);
             })
         }
-
-        // const handleDelete = function (id) {
-        //     deleteQuestion({ id: id }).then(res => {
-        //         console.log(res);
-        //         if (res.data.status == "ok") {
-        //             message.success("删除成功");
-        //             store.commit("updateQuestion");
-        //         } else {
-        //             message.error("删除失败");
-        //         }
-        //     })
-        // }
-
-        // provide("handleDelete", handleDelete);
 
         getData();
 

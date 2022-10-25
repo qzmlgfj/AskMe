@@ -1,6 +1,6 @@
 <template>
     <div class="foot-bar">
-        <n-text depth="3" @click="handleClick">AskMe! {{version}} · Made by Ant</n-text>
+        <n-text depth="3" @click="handleClick">AskMe! {{                                version                                }} · Made by Ant</n-text>
     </div>
 </template>
 
@@ -30,13 +30,19 @@ export default {
             this.clickTimes++;
             const { showAuthModal } = this.showAuthModal;
             if (this.clickTimes == 3) {
-                checkAdminExists().then((res) => {
-                    if (res.data.status == "no") {
-                        showAuthModal("register");
-                    } else {
-                        showAuthModal("login");
-                    }
-                });
+                if (this.$store.state.userName == "") {
+                    checkAdminExists().then((res) => {
+                        if (res.data.status == "no") {
+                            showAuthModal("register");
+                        } else {
+                            showAuthModal("login");
+                        }
+                    });
+                } else {
+                    this.$store.commit("clearUserName");
+                    this.$store.commit("setQueryMode", "answered");
+                    this.$store.commit("updateQuestion");
+                }
                 this.clickTimes = 0;
             }
         }

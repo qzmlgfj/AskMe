@@ -12,10 +12,19 @@ def return_all_questions():
     return jsonify(Question.get_all())
 
 
-# 查看所有问题，参数为unanswered
+# 查看未回答问题，参数为unanswered
 @question_bp.route("unanswered", methods=["GET"])
 def return_unanswered_questions():
     return jsonify(Question.get_unanswered())
+
+@question_bp.route("unanswered_num", methods=["GET"])
+def return_unanswered_num():
+    return jsonify(Question.get_unanswered_num())
+
+# 查看已回答问题，参数为answered
+@question_bp.route("answered", methods=["GET"])
+def return_answered_questions():
+    return jsonify(Question.get_answered())
 
 # 查看指定id问题
 @question_bp.route("<int:question_id>", methods=["GET"])

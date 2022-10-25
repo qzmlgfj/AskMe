@@ -65,6 +65,14 @@ class Question(db.Model):
         return cls.query.filter_by(answered=False).order_by(cls.created_at.desc()).all()
 
     @classmethod
+    def get_unanswered_num(cls):
+        return cls.query.filter_by(answered=False).count()
+
+    @classmethod
+    def get_answered(cls):
+        return cls.query.filter_by(answered=True).order_by(cls.created_at.desc()).all()
+
+    @classmethod
     def answer_question(cls, id, answer):
         question = cls.query.get(id)
         question.answered = True

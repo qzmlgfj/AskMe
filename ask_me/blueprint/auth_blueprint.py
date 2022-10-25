@@ -33,7 +33,6 @@ def login():
         print(e)
         return jsonify({"status": "fail"})
 
-
 @auth_bp.route("register", methods=["POST"])
 def register():
     try:

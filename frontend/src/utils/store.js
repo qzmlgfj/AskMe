@@ -5,6 +5,7 @@ const store = createStore({
         return {
             columnNum: 3,
             updateFlag: 0,
+            queryMode: "answered",
             userName: "",
             currentQuestion: null,
             isMobile: false
@@ -29,6 +30,9 @@ const store = createStore({
         setIsMobile(state, isMobile) {
             state.isMobile = isMobile;
             state.columnNum = isMobile ? 1 : 3;
+        },
+        setQueryMode(state, mode) {
+            state.queryMode = mode;
         }
     }
 })

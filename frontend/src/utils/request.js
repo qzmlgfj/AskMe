@@ -7,17 +7,10 @@ function getVersion() {
     })
 }
 
-function getAllQuestions() {
+function getQuestions(mode) {
     return service({
         method: "get",
-        url: "/api/question/all",
-    })
-}
-
-function getUnansweredQuestions() {
-    return service({
-        method: "get",
-        url: "/api/question/unanswered",
+        url: "/api/question/" + mode,
     })
 }
 
@@ -85,8 +78,7 @@ function checkAdminExists() {
 
 export {
     getVersion,
-    getAllQuestions,
-    getUnansweredQuestions,
+    getQuestions,
     addQuestion,
     answerQuestion,
     deleteQuestion,
