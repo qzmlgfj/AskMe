@@ -14,6 +14,7 @@
                     <n-layout-footer bordered>
                         <foot-bar></foot-bar>
                     </n-layout-footer>
+                    <n-back-top :right="80" :bottom="30"></n-back-top>
                 </n-scrollbar>
                 <n-button id="add-btn" circle strong type="info" size="large" @click="showAddQuestionModal">
                     <template #icon>
@@ -43,6 +44,7 @@ import {
     NScrollbar,
     darkTheme,
     NButton,
+    NBackTop,
     NMessageProvider,
     NModal
 } from "naive-ui";
@@ -54,8 +56,6 @@ import HeadBar from "./components/HeadBar.vue";
 import MainContent from "./components/MainContent.vue";
 import FootBar from "./components/FootBar.vue";
 
-// import { getCurrentUser } from "@/utils/request";
-
 export default {
     name: 'App',
     components: {
@@ -66,6 +66,7 @@ export default {
         NLayoutFooter,
         NScrollbar,
         NButton,
+        NBackTop,
         PlaylistAdd,
         NMessageProvider,
         NModal,
