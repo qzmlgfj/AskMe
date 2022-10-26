@@ -4,7 +4,7 @@ import { useStore } from "vuex";
 
 import Column from './Column.vue';
 
-import { getQuestions } from "@/utils/request";
+import { getQuestions, getUnansweredQuestionsNum } from "@/utils/request";
 
 export default {
     name: 'MainContent',
@@ -37,6 +37,10 @@ export default {
                     item.answered_at = new Date(item.answered_at);
                 });
                 distribute_data(question_data);
+            })
+            getUnansweredQuestionsNum().then((res) => {
+                console.log(res.data.num);
+                store.commit('setUnansweredNum', res.data.num);
             })
         }
 

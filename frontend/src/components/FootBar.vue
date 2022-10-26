@@ -1,6 +1,6 @@
 <template>
     <div class="foot-bar">
-        <n-text depth="3" @click="handleClick">AskMe! {{                                version                                }} · Made by Ant</n-text>
+        <n-text depth="3" @click="handleClick">AskMe! {{ version }} · Made by Ant</n-text>
     </div>
 </template>
 

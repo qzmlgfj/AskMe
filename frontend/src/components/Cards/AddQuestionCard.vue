@@ -1,5 +1,5 @@
 <template>
-    <n-card style="width: 500px" title="开始整蛊" :bordered="false" size="huge" role="dialog" aria-modal="true"
+    <n-card style="width: 400px" title="开始整蛊" :bordered="false" size="huge" role="dialog" aria-modal="true"
         footer-style="display:flex;justify-content:space-around;" :segmented="{content: true}" closable
         @close="closeModal">
         <n-space vertical>
@@ -11,9 +11,9 @@
                     <n-input v-model:value="formValue.question.content" type="textarea" placeholder="输入问题内容"
                         maxlength="50" show-count />
                 </n-form-item>
-                <n-form-item label="私密" path="question.private">
+                <!-- <n-form-item label="私密" path="question.private">
                     <n-switch v-model:value="formValue.question.private" />
-                </n-form-item>
+                </n-form-item> -->
             </n-form>
         </n-space>
         <template #footer>
@@ -27,7 +27,7 @@
 import { ref, inject } from "vue";
 import { useStore } from "vuex";
 
-import { NCard, NSpace, NForm, NFormItem, NInput, NSwitch, NButton, useMessage } from "naive-ui";
+import { NCard, NSpace, NForm, NFormItem, NInput, NButton, useMessage } from "naive-ui";
 
 import { addQuestion } from "@/utils/request"
 
@@ -39,7 +39,6 @@ export default {
         NForm,
         NFormItem,
         NInput,
-        NSwitch,
         NButton
     },
     setup() {
@@ -80,11 +79,11 @@ export default {
                 if (!errors) {
                     addQuestion(formValue.value.question).then(res => {
                         if (res.data.status == "ok") {
-                            message.success("添加成功");
+                            message.success("添加成功，我们回头见");
                             closeModal();
                             store.commit("updateQuestion");
                         } else {
-                            message.error("添加失败");
+                            message.error("添加失败，要不待会试试？");
                         }
                     })
                 } else {

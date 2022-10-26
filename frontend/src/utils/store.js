@@ -8,7 +8,8 @@ const store = createStore({
             queryMode: "answered",
             userName: "",
             currentQuestion: null,
-            isMobile: false
+            isMobile: false,
+            unansweredNum: 0,
         }
     },
     mutations: {
@@ -33,6 +34,9 @@ const store = createStore({
         },
         setQueryMode(state, mode) {
             state.queryMode = mode;
+        },
+        setUnansweredNum(state, num) {
+            state.unansweredNum = num;
         }
     }
 })

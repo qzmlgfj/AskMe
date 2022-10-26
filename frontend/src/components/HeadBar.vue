@@ -6,18 +6,20 @@
             </template>
             <n-text>{{ poetry }}</n-text>
         </n-popover>
-        <n-space>
-            <n-button quaternary @click="handleFilter" size="large" v-if="ifLogin">
-                <template #icon>
-                    <n-icon>
-                        <mail-opened v-if="queryMode == 'answered'" />
-                        <mail-forward v-else-if="queryMode == 'unanswered'" />
-                        <mail v-else />
-                    </n-icon>
-                </template>
-                <template v-if="!isMobile">{{ queryText }}</template>
-            </n-button>
-            <n-button quaternary @click="handleRefresh" size="large">
+        <n-space :size="isMobile ? 'small' : 'medium'">
+            <n-badge :value="unansweredNum" dot v-if="ifLogin">
+                <n-button quaternary @click="handleFilter" :size="isMobile ? 'medium' : 'large'">
+                    <template #icon>
+                        <n-icon>
+                            <mail-opened v-if="queryMode == 'answered'" />
+                            <mail-forward v-else-if="queryMode == 'unanswered'" />
+                            <mail v-else />
+                        </n-icon>
+                    </template>
+                    <template v-if="!isMobile">{{ queryText }}</template>
+                </n-button>
+            </n-badge>
+            <n-button quaternary @click="handleRefresh" :size="isMobile ? 'medium' : 'large'">
                 <template #icon>
                     <n-icon>
                         <refresh />
@@ -25,7 +27,7 @@
                 </template>
                 <template v-if="!isMobile">刷新</template>
             </n-button>
-            <n-button quaternary @click="switchTheme" size="large">
+            <n-button quaternary @click="switchTheme" :size="isMobile ? 'medium' : 'large'">
                 <template #icon>
                     <n-icon>
                         <sun v-if="isDaytime" />
@@ -34,7 +36,7 @@
                 </template>
                 <template v-if="!isMobile">{{ theme }}</template>
             </n-button>
-            <n-button quaternary size="large" tag="a" href="https://github.com/qzmlgfj/AskMe">
+            <n-button quaternary :size="isMobile ? 'medium' : 'large'" tag="a" href="https://github.com/qzmlgfj/AskMe" v-if="!ifLogin">
                 <template #icon>
                     <n-icon>
                         <brand-github />
@@ -48,7 +50,7 @@
 
 <script>
 import { inject, computed } from "vue";
-import { NH1, NPopover, NText, NSpace, NButton, NIcon } from "naive-ui";
+import { NH1, NPopover, NText, NSpace, NButton, NIcon, NBadge } from "naive-ui";
 import { Mail, MailForward, MailOpened, Refresh, BrandGithub, Sun, Moon } from "@vicons/tabler";
 import { useStore } from "vuex";
 
@@ -63,6 +65,7 @@ export default {
         NSpace,
         NButton,
         NIcon,
+        NBadge,
         Mail,
         MailForward,
         MailOpened,
@@ -79,6 +82,7 @@ export default {
         const isMobile = computed(() => store.state.isMobile);
         const queryMode = computed(() => store.state.queryMode);
         const ifLogin = computed(() => store.state.userName != "");
+        const unansweredNum = computed(() => store.state.unansweredNum);
 
         return {
             isDaytime,
@@ -86,7 +90,8 @@ export default {
             switchTheme,
             isMobile,
             queryMode,
-            ifLogin
+            ifLogin,
+            unansweredNum,
         }
     },
     data() {
@@ -108,11 +113,11 @@ export default {
         },
         handleFilter() {
             if (this.$store.state.queryMode == "answered") {
-                this.$store.commit("setQueryMode", "unanswered");
-                this.queryText = "未回复";
-            } else if (this.$store.state.queryMode === "unanswered") {
                 this.$store.commit("setQueryMode", "all");
                 this.queryText = "全部";
+            } else if (this.$store.state.queryMode === "all") {
+                this.$store.commit("setQueryMode", "unanswered");
+                this.queryText = "未回复";
             } else {
                 this.$store.commit("setQueryMode", "answered");
                 this.queryText = "已回复";

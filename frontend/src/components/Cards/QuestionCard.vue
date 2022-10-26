@@ -43,6 +43,7 @@
             <div v-if="argv.answered">
                 {{ argv.answer }}
                 <br>
+                <br>
                 <n-time :time="argv.answered_at"></n-time>
             </div>
             <div v-else>

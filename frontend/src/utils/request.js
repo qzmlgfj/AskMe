@@ -14,6 +14,13 @@ function getQuestions(mode) {
     })
 }
 
+function getUnansweredQuestionsNum() {
+    return service({
+        method: "get",
+        url: "/api/question/unanswered_num",
+    })
+}
+
 function addQuestion(data) {
     return service({
         method: "post",
@@ -79,6 +86,7 @@ function checkAdminExists() {
 export {
     getVersion,
     getQuestions,
+    getUnansweredQuestionsNum,
     addQuestion,
     answerQuestion,
     deleteQuestion,
