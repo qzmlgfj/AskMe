@@ -39,7 +39,6 @@ export default {
                 distribute_data(question_data);
             })
             getUnansweredQuestionsNum().then((res) => {
-                console.log(res.data.num);
                 store.commit('setUnansweredNum', res.data.num);
             })
         }

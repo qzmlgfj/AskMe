@@ -7,7 +7,7 @@
             <n-text>{{ poetry }}</n-text>
         </n-popover>
         <n-space :size="isMobile ? 'small' : 'medium'">
-            <n-badge :value="unansweredNum" dot v-if="ifLogin">
+            <n-badge :value="unansweredNum" type="success" v-if="ifLogin">
                 <n-button quaternary @click="handleFilter" :size="isMobile ? 'medium' : 'large'">
                     <template #icon>
                         <n-icon>
