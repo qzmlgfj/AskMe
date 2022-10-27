@@ -1,6 +1,6 @@
 <template>
     <n-card style="width: 400px" title="开始整蛊" :bordered="false" size="huge" role="dialog" aria-modal="true"
-        footer-style="display:flex;justify-content:space-around;" :segmented="{content: true}" closable
+        footer-style="display:flex;justify-content:space-around;" :segmented="{           content: true           }" closable
         @close="closeModal">
         <n-space vertical>
             <n-form ref="formRef" :model="formValue" :rules="rules">
@@ -60,14 +60,14 @@ export default {
                     {
                         required: true,
                         message: "标题不能为空",
-                        trigger: "blur"
+                        trigger: ["input", "blur"]
                     },
                 ],
                 content: [
                     {
                         required: true,
                         message: "内容不能为空",
-                        trigger: "blur"
+                        trigger: ["input", "blur"]
                     },
                 ],
             },

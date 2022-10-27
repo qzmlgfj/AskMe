@@ -80,21 +80,21 @@ export default {
                     {
                         required: true,
                         message: "标题不能为空",
-                        trigger: "blur"
+                        trigger: ["input", "blur"]
                     },
                 ],
                 content: [
                     {
                         required: true,
                         message: "问题不能为空",
-                        trigger: "blur"
+                        trigger: ["input", "blur"]
                     },
                 ],
                 answer: [
                     {
                         required: true,
                         message: "回答不能为空",
-                        trigger: "blur"
+                        trigger: ["input", "blur"]
                     },
                 ],
             },

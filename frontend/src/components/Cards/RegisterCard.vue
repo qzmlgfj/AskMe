@@ -4,7 +4,7 @@
         @close="closeModal">
         <n-space vertical>
             <n-form ref="formRef" :model="formValue" :rules="rules">
-                <n-form-item label="用户名" path="user.userName">
+                <n-form-item label="用户名" path="user.username">
                     <n-input v-model:value="formValue.user.username" placeholder="输入用户名" />
                 </n-form-item>
                 <n-form-item label="密码" path="user.password">
@@ -62,26 +62,26 @@ export default {
                     {
                         required: true,
                         message: "用户名不能为空",
-                        trigger: "blur"
+                        trigger: ["input", "blur"]
                     },
                 ],
                 password: [
                     {
                         required: true,
                         message: "内容不能为空",
-                        trigger: "blur"
+                        trigger: ["input", "blur"]
                     },
                 ],
                 repassword: [
                     {
                         required: true,
                         message: "请再次输入密码",
-                        trigger: ["blur"]
+                        trigger: ["input", "blur"]
                     },
                     {
                         validator: validatePasswordSame,
                         message: "两次密码输入不一致",
-                        trigger: ["blur"]
+                        trigger: ["input", "blur"]
                     }
                 ]
             },

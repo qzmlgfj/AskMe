@@ -52,7 +52,7 @@ export default {
                     {
                         required: true,
                         message: "回答不能为空",
-                        trigger: "blur"
+                        trigger: ["input", "blur"]
                     },
                 ],
             },

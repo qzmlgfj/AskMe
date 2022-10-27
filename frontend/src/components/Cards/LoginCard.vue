@@ -3,15 +3,15 @@
         footer-style="display:flex;justify-content:space-around;" :segmented="{content: true}" closable
         @close="closeModal">
         <n-space vertical>
-            <n-form :model="formValue">
-                <n-form-item label="用户名" path="user.userName">
+            <n-form ref="formRef" :model="formValue" :rules="rules">
+                <n-form-item label="用户名" path="user.username">
                     <n-input v-model:value="formValue.user.username" placeholder="输入用户名" />
                 </n-form-item>
                 <n-form-item label="密码" path="user.password">
                     <n-input v-model:value="formValue.user.password" type="password" show-password-on="click"
                         placeholder="输入密码" />
                 </n-form-item>
-                <n-form-item path="user.rememberMe">
+                <n-form-item path="user.rememberme">
                     <n-checkbox v-model:checked="formValue.user.remember">记住我</n-checkbox>
                 </n-form-item>
             </n-form>
@@ -44,6 +44,10 @@ export default {
     },
     setup() {
         const { closeModal } = inject("closeModal");
+        const message = useMessage();
+        const store = useStore();
+
+        const formRef = ref(null);
         const formValue = ref({
             user: {
                 username: "",
@@ -51,8 +55,24 @@ export default {
                 remember: false,
             }
         })
-        const message = useMessage();
-        const store = useStore();
+        const rules = {
+            user: {
+                username: [
+                    {
+                        required: true,
+                        message: "用户名不能为空",
+                        trigger: ["input", "blur"]
+                    },
+                ],
+                password: [
+                    {
+                        required: true,
+                        message: "内容不能为空",
+                        trigger: ["input", "blur"]
+                    },
+                ]
+            },
+        };
 
         const handleLogin = function () {
             login(formValue.value.user).then(res => {
@@ -71,7 +91,9 @@ export default {
 
         return {
             closeModal,
+            formRef,
             formValue,
+            rules,
             handleLogin
         };
     }
