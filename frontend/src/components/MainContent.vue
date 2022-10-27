@@ -1,6 +1,18 @@
+<template>
+    <n-spin :show="showSpin">
+        <div class="empty" v-if="question_num == 0">
+            <n-empty size="huge" description="啥也没有" />
+        </div>
+        <div class="column-container" v-else>
+            <column v-for="(item, index) in column_lst" :argv="item" :key="index" />
+        </div>
+    </n-spin>
+</template>
+
 <script>
 import { ref, computed } from 'vue';
 import { useStore } from "vuex";
+import { NEmpty, NSpin } from "naive-ui";
 
 import Column from './Column.vue';
 
@@ -10,13 +22,17 @@ export default {
     name: 'MainContent',
     components: {
         Column,
+        NEmpty,
+        NSpin
     },
     setup() {
         const store = useStore();
         const column_num = computed(() => store.state.columnNum);
         const column_lst = ref([]);
         const updateFlag = computed(() => store.state.updateFlag);
-        let question_data = ref(null);
+        const question_data = ref(null);
+        const question_num = ref(0);
+        const showSpin = ref(false);
 
         // 将数据分散到不同的column中
         const distribute_data = function () {
@@ -30,13 +46,16 @@ export default {
         }
 
         const getData = function () {
+            showSpin.value = true;
             getQuestions(store.state.queryMode).then((res) => {
                 question_data.value = res.data;
+                question_num.value = res.data.length;
                 question_data.value.map((item) => {
                     item.created_at = new Date(item.created_at);
                     item.answered_at = new Date(item.answered_at);
                 });
                 distribute_data(question_data);
+                showSpin.value = false;
             })
             getUnansweredQuestionsNum().then((res) => {
                 store.commit('setUnansweredNum', res.data.num);
@@ -50,21 +69,23 @@ export default {
             column_lst,
             updateFlag,
             question_data,
+            question_num,
+            showSpin,
             distribute_data,
             getData,
         }
     },
-    render() {
-        return (
-            <div class="main">
-                {
-                    this.column_lst.map((item) => {
-                        return <column argv={item}></column>
-                    })
-                }
-            </div>
-        )
-    },
+    // render() {
+    //     return (
+    //         <div class="main">
+    //             {
+    //                 this.question_num === 0 ? <NEmpty description="什么也没有" /> : this.column_lst.map((item) => {
+    //                     return <column argv={item}></column>
+    //                 })
+    //             }
+    //         </div>
+    //     )
+    // },
     watch: {
         column_num: {
             handler: function () {
@@ -83,7 +104,17 @@ export default {
 </script>
 
 <style scoped>
-.main {
+.empty {
+    min-height: 80vh;
+    box-sizing: border-box;
+    padding: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.column-container {
     min-height: 80vh;
     box-sizing: border-box;
     padding: 32px;

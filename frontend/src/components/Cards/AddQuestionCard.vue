@@ -9,7 +9,7 @@
                 </n-form-item>
                 <n-form-item label="问题" path="question.content">
                     <n-input v-model:value="formValue.question.content" type="textarea" placeholder="输入问题内容"
-                        maxlength="50" show-count />
+                        maxlength="100" show-count />
                 </n-form-item>
                 <!-- <n-form-item label="私密" path="question.private">
                     <n-switch v-model:value="formValue.question.private" />

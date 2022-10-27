@@ -9,11 +9,11 @@
                 </n-form-item>
                 <n-form-item label="问题" path="question.content">
                     <n-input v-model:value="formValue.question.content" type="textarea" placeholder="输入问题内容"
-                        maxlength="50" show-count />
+                        maxlength="100" show-count />
                 </n-form-item>
                 <n-form-item label="回答" path="question.answer">
                     <n-input v-model:value="formValue.question.answer" type="textarea" placeholder="输入回答内容"
-                        maxlength="50" show-count />
+                        maxlength="100" show-count />
                 </n-form-item>
                 <n-space justify="space-around">
                     <n-form-item label="私密" path="question.private">

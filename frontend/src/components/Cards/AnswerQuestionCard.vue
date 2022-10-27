@@ -5,7 +5,7 @@
         <n-space vertical>
             <n-form ref="formRef" :model="formValue" :rules="rules">
                 <n-form-item label="回答" path="answer.content">
-                    <n-input v-model:value="formValue.answer.content" type="textarea" placeholder="开始辱骂" />
+                    <n-input v-model:value="formValue.answer.content" type="textarea" placeholder="开始辱骂" maxlength="100" show-count/>
                 </n-form-item>
             </n-form>
         </n-space>
