@@ -75,17 +75,6 @@ export default {
             getData,
         }
     },
-    // render() {
-    //     return (
-    //         <div class="main">
-    //             {
-    //                 this.question_num === 0 ? <NEmpty description="什么也没有" /> : this.column_lst.map((item) => {
-    //                     return <column argv={item}></column>
-    //                 })
-    //             }
-    //         </div>
-    //     )
-    // },
     watch: {
         column_num: {
             handler: function () {

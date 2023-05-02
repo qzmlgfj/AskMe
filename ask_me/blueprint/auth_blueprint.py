@@ -42,15 +42,6 @@ def register():
     except Exception as e:
         return jsonify({"status": "fail"})
 
-
-# @auth_bp.route("currentuser", methods=["GET"])
-# def current_user_info():
-#     if current_user.is_authenticated:
-#         return jsonify({"username": current_user.username})
-#     else:
-#         return jsonify({"username": "None"})
-
-
 @auth_bp.route("checkadmin", methods=["GET"])
 def check_admin():
     return jsonify({"status": "yes" if Admin.check_admin_exists() else "no"})
