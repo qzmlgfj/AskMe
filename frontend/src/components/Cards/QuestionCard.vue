@@ -38,6 +38,7 @@
         {{ argv.content }}
         <br>
         <br>
+        <!-- TODO 考虑渲染一下ID -->
         <n-time :time="argv.created_at"></n-time>
         <template v-if="showAnswer" #footer>
             <div v-if="argv.answered">
@@ -62,7 +63,7 @@
 <script>
 import { ref, inject, computed } from "vue";
 import { useStore } from "vuex";
-import { NCard, NSpace, NButton, NIcon, NEmpty, NTime } from "naive-ui";
+import { NCard, NSpace, NButton, NIcon, NEmpty, NText, NTime } from "naive-ui";
 import { Key, Activity, Cone, Pencil } from "@vicons/tabler"
 
 export default {
@@ -75,6 +76,7 @@ export default {
         NIcon,
         NEmpty,
         NTime,
+        NText,
         Key,
         Activity,
         Cone,

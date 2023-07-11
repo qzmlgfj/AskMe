@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import uuid
 from datetime import datetime
 
 from ..extensions import db
@@ -6,7 +7,7 @@ from ..extensions import db
 
 @dataclass
 class Question(db.Model):
-    id: int
+    id: str
     title: str
     content: str
     created_at: datetime
@@ -16,7 +17,7 @@ class Question(db.Model):
     answer: str
     answered_at: datetime
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Text, primary_key=True)
     title = db.Column(db.Text, nullable=False)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime)
@@ -27,6 +28,7 @@ class Question(db.Model):
     answered_at = db.Column(db.DateTime)
 
     def __init__(self, title, content, private):
+        self.id = str(uuid.uuid4())
         self.title = title
         self.content = content
         self.private = private
@@ -34,8 +36,10 @@ class Question(db.Model):
 
     @classmethod
     def add(cls, title, content, private):
-        db.session.add(cls(title, content, private))
+        question = cls(title, content, private)
+        db.session.add(question)
         db.session.commit()
+        return question.id
 
     @classmethod
     def update(cls, id, title, content, private, answer):

@@ -41,8 +41,8 @@ def return_question(question_id):
 def add_question():
     try:
         data = request.get_json()
-        Question.add(data["title"], data["content"], data["private"])
-        return jsonify({"status": "ok"})
+        id = Question.add(data["title"], data["content"], data["private"])
+        return jsonify({"status": "ok", "id": id})
     except Exception as e:
         return jsonify({"status": "fail"})
 
