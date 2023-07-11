@@ -11,9 +11,9 @@
                     <n-input v-model:value="formValue.question.content" type="textarea" placeholder="输入问题内容"
                         maxlength="100" show-count />
                 </n-form-item>
-                <!-- <n-form-item label="私密" path="question.private">
+                <n-form-item label="私密" path="question.private">
                     <n-switch v-model:value="formValue.question.private" />
-                </n-form-item> -->
+                </n-form-item>
             </n-form>
         </n-space>
         <template #footer>
@@ -27,7 +27,7 @@
 import { ref, inject } from "vue";
 import { useStore } from "vuex";
 
-import { NCard, NSpace, NForm, NFormItem, NInput, NButton, useMessage } from "naive-ui";
+import { NCard, NSpace, NForm, NFormItem, NSwitch, NInput, NButton, useMessage } from "naive-ui";
 
 import { addQuestion } from "@/utils/request"
 
@@ -38,6 +38,7 @@ export default {
         NSpace,
         NForm,
         NFormItem,
+        NSwitch,
         NInput,
         NButton
     },
@@ -79,7 +80,13 @@ export default {
                 if (!errors) {
                     addQuestion(formValue.value.question).then(res => {
                         if (res.data.status == "ok") {
-                            message.success("添加成功，我们回头见");
+                            message.success(
+                                "添加成功，我们回头见，问题id为 " + res.data.id + "，记得保存",
+                                {
+                                    closable: true,
+                                    duration: 15000
+                                }
+                            );
                             closeModal();
                             store.commit("updateQuestion");
                         } else {
