@@ -112,14 +112,14 @@ export default {
             this.$store.commit("updateQuestion");
         },
         handleFilter() {
-            if (this.$store.state.queryMode == "answered") {
+            if (this.$store.state.queryMode == "admin_answered") {
                 this.$store.commit("setQueryMode", "all");
                 this.queryText = "全部";
             } else if (this.$store.state.queryMode === "all") {
                 this.$store.commit("setQueryMode", "unanswered");
                 this.queryText = "未回复";
             } else {
-                this.$store.commit("setQueryMode", "answered");
+                this.$store.commit("setQueryMode", "admin_answered");
                 this.queryText = "已回复";
             }
             this.$store.commit("updateQuestion");

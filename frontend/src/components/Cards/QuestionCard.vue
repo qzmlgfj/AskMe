@@ -63,7 +63,7 @@
 <script>
 import { ref, inject, computed } from "vue";
 import { useStore } from "vuex";
-import { NCard, NSpace, NButton, NIcon, NEmpty, NText, NTime } from "naive-ui";
+import { NCard, NSpace, NButton, NIcon, NEmpty, NTime } from "naive-ui";
 import { Key, Activity, Cone, Pencil } from "@vicons/tabler"
 
 export default {
@@ -76,7 +76,6 @@ export default {
         NIcon,
         NEmpty,
         NTime,
-        NText,
         Key,
         Activity,
         Cone,

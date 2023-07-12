@@ -5,7 +5,7 @@ const store = createStore({
         return {
             columnNum: 3,
             updateFlag: 0,
-            queryMode: "answered",
+            queryMode: "unprivate_and_answered",
             userName: "",
             currentQuestion: null,
             isMobile: false,

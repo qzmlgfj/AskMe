@@ -73,6 +73,10 @@ class Question(db.Model):
         return cls.query.filter_by(answered=False).count()
 
     @classmethod
+    def unprivate_and_answered(cls):
+        return cls.query.filter_by(answered=True, private=False).order_by(cls.created_at.desc()).all()
+    
+    @classmethod
     def get_answered(cls):
         return cls.query.filter_by(answered=True).order_by(cls.created_at.desc()).all()
 
