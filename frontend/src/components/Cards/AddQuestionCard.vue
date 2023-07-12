@@ -11,7 +11,7 @@
                     <n-input v-model:value="formValue.question.content" type="textarea" placeholder="输入问题内容"
                         maxlength="100" show-count />
                 </n-form-item>
-                <n-form-item label="私密" path="question.private">
+                <n-form-item label="非公开" path="question.private">
                     <n-switch v-model:value="formValue.question.private" />
                 </n-form-item>
             </n-form>

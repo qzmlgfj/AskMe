@@ -25,7 +25,14 @@ def return_unanswered_num():
 
 
 # 查看已回答问题，参数为answered
-@question_bp.route("answered", methods=["GET"])
+@question_bp.route("unprivate_and_answered", methods=["GET"])
+def return_unprivate_and_answered_questions():
+    return jsonify(Question.unprivate_and_answered())
+
+
+# 查看已回答问题，参数为admin_answered，包含私密问题
+@question_bp.route("admin_answered", methods=["GET"])
+@token_required
 def return_answered_questions():
     return jsonify(Question.get_answered())
 
