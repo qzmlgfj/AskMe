@@ -6,6 +6,14 @@
             </template>
             <n-text>{{ poetry }}</n-text>
         </n-popover>
+        <div style="min-width: 40%; display: flex;" v-if="!ifLogin">
+            <n-input v-model:value="questionId" round placeholder="请输入问题ID" autosize clearable style="min-width: 90%" />
+            <n-button quaternary circle @click="handleSearch">
+                <template #icon>
+                    <n-icon><search /></n-icon>
+                </template>
+            </n-button>
+        </div>
         <n-space :size="isMobile ? 'small' : 'medium'">
             <n-badge :value="unansweredNum" type="success" v-if="ifLogin">
                 <n-button quaternary @click="handleFilter" :size="isMobile ? 'medium' : 'large'">
@@ -36,7 +44,8 @@
                 </template>
                 <template v-if="!isMobile">{{ theme }}</template>
             </n-button>
-            <n-button quaternary :size="isMobile ? 'medium' : 'large'" tag="a" href="https://github.com/qzmlgfj/AskMe" v-if="!ifLogin">
+            <n-button quaternary :size="isMobile ? 'medium' : 'large'" tag="a" href="https://github.com/qzmlgfj/AskMe"
+                v-if="!ifLogin">
                 <template #icon>
                     <n-icon>
                         <brand-github />
@@ -49,9 +58,9 @@
 </template>
 
 <script>
-import { inject, computed } from "vue";
-import { NH1, NPopover, NText, NSpace, NButton, NIcon, NBadge } from "naive-ui";
-import { Mail, MailForward, MailOpened, Refresh, BrandGithub, Sun, Moon } from "@vicons/tabler";
+import { inject, computed, ref } from "vue";
+import { NH1, NPopover, NText, NSpace, NButton, NIcon, NBadge, NInput } from "naive-ui";
+import { Mail, MailForward, MailOpened, Refresh, BrandGithub, Sun, Moon, Search } from "@vicons/tabler";
 import { useStore } from "vuex";
 
 const jinrishici = require('jinrishici');
@@ -66,13 +75,15 @@ export default {
         NButton,
         NIcon,
         NBadge,
+        NInput,
         Mail,
         MailForward,
         MailOpened,
         Refresh,
         BrandGithub,
         Sun,
-        Moon
+        Moon,
+        Search
     },
     setup() {
         const { isDaytime, switchTheme } = inject("switchTheme");
@@ -84,6 +95,13 @@ export default {
         const ifLogin = computed(() => store.state.userName != "");
         const unansweredNum = computed(() => store.state.unansweredNum);
 
+        const questionId = ref(null);
+
+        const handleSearch = () => {
+            store.commit("setQueryMode", "get_question/" + questionId.value);
+            store.commit("updateQuestion");
+        }
+
         return {
             isDaytime,
             theme,
@@ -92,6 +110,8 @@ export default {
             queryMode,
             ifLogin,
             unansweredNum,
+            questionId,
+            handleSearch
         }
     },
     data() {
@@ -129,6 +149,16 @@ export default {
         jinrishici.load(result => {
             this.poetry = result.data.content;
         });
+    },
+    watch: {
+        questionId: {
+            handler: function (val) {
+                if (val == "") {
+                    this.$store.commit("setQueryMode", "unprivate_and_answered");
+                    this.$store.commit("updateQuestion");
+                }
+            }
+        }
     }
 }
 </script>
