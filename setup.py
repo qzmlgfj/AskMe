@@ -18,6 +18,6 @@ setup(
         "pyjwt>=2.5.0",
     ],
     long_description_content_type="text/markdown",
-    long_description=open("README.md").read(),
+    long_description=open("README.md", encoding='utf-8').read(),
     url="https://github.com/qzmlgfj/AskMe",
 )
