@@ -97,7 +97,7 @@ export default {
     data() {
         return {
             poetry: "",
-            queryText: "已回复"
+            queryText: "未回复"
         }
     },
     methods: {
