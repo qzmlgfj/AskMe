@@ -1,20 +1,35 @@
 <template>
     <div class="head-bar">
-        <n-popover trigger="hover" @update:show="handleUpdateShow">
+        <n-popover trigger="hover" @update:show="handleTitleUpdateShow">
             <template #trigger>
                 <n-h1>AskMe !</n-h1>
             </template>
             <n-text>{{ poetry }}</n-text>
         </n-popover>
-        <div style="min-width: 40%; display: flex;" v-if="!ifLogin">
+        <div style="min-width: 20%; display: flex;" v-if="!ifLogin && !isMobile">
             <n-input v-model:value="questionId" round placeholder="请输入问题ID" autosize clearable style="min-width: 90%" />
             <n-button quaternary circle @click="handleSearch">
                 <template #icon>
-                    <n-icon><search /></n-icon>
+                    <n-icon>
+                        <search />
+                    </n-icon>
                 </template>
             </n-button>
         </div>
         <n-space :size="isMobile ? 'small' : 'medium'">
+            <n-popover v-if="isMobile" trigger="click" @update:show="handleTitleUpdateShow">
+                <template #trigger>
+                    <n-button quaternary :size="isMobile ? 'medium' : 'large'">
+                        <template #icon>
+                            <n-icon>
+                                <search />
+                            </n-icon>
+                        </template>
+                        <template v-if="!isMobile">搜索</template>
+                    </n-button>
+                </template>
+                <n-input v-model:value="questionId" round placeholder="请输入问题ID" clearable @keyup="handleKeyUp"/>
+            </n-popover>
             <n-badge :value="unansweredNum" type="success" v-if="ifLogin">
                 <n-button quaternary @click="handleFilter" :size="isMobile ? 'medium' : 'large'">
                     <template #icon>
@@ -121,11 +136,16 @@ export default {
         }
     },
     methods: {
-        handleUpdateShow(show) {
+        handleTitleUpdateShow(show) {
             if (!show) {
                 jinrishici.load(result => {
                     this.poetry = result.data.content;
                 });
+            }
+        },
+        handleKeyUp(event) {
+            if (event.code == "enter") {
+                this.handleSearch();
             }
         },
         handleRefresh() {
