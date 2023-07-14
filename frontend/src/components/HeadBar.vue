@@ -7,7 +7,8 @@
             <n-text>{{ poetry }}</n-text>
         </n-popover>
         <div style="min-width: 20%; display: flex;" v-if="!ifLogin && !isMobile">
-            <n-input v-model:value="questionId" round placeholder="请输入问题ID" autosize clearable style="min-width: 90%" />
+            <n-input v-model:value="questionId" round placeholder="请输入问题ID" autosize clearable style="min-width: 90%"
+                @keyup="handleKeyUp" />
             <n-button quaternary circle @click="handleSearch">
                 <template #icon>
                     <n-icon>
@@ -28,7 +29,7 @@
                         <template v-if="!isMobile">搜索</template>
                     </n-button>
                 </template>
-                <n-input v-model:value="questionId" round placeholder="请输入问题ID" clearable @keyup="handleKeyUp"/>
+                <n-input v-model:value="questionId" round placeholder="请输入问题ID" clearable @keyup="handleKeyUp" />
             </n-popover>
             <n-badge :value="unansweredNum" type="success" v-if="ifLogin">
                 <n-button quaternary @click="handleFilter" :size="isMobile ? 'medium' : 'large'">
