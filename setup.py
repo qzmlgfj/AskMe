@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 from ask_me import __version__
 
 setup(
-    name="askme",
+    name="ant_ask_me",
     version=__version__,
     packages=find_packages(),
     include_package_data=True,
