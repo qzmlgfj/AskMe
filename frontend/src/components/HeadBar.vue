@@ -7,15 +7,8 @@
             <n-text>{{ poetry }}</n-text>
         </n-popover>
         <div style="min-width: 20%; display: flex;" v-if="!ifLogin && !isMobile">
-            <n-input v-model:value="questionId" round placeholder="请输入问题ID" autosize clearable style="min-width: 90%"
+            <n-input v-model:value="questionId" round placeholder="请输入问题ID，回车键进行搜索" autosize clearable style="min-width: 90%"
                 @keyup="handleKeyUp" />
-            <n-button quaternary circle @click="handleSearch">
-                <template #icon>
-                    <n-icon>
-                        <search />
-                    </n-icon>
-                </template>
-            </n-button>
         </div>
         <n-space :size="isMobile ? 'small' : 'medium'">
             <n-popover v-if="isMobile" trigger="click" @update:show="handleTitleUpdateShow">
@@ -145,7 +138,7 @@ export default {
             }
         },
         handleKeyUp(event) {
-            if (event.code == "enter") {
+            if (event.code == "Enter") {
                 this.handleSearch();
             }
         },
