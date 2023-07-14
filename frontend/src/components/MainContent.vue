@@ -1,6 +1,6 @@
 <template>
     <n-spin :show="showSpin">
-        <div class="empty" v-if="question_num == 0">
+        <div class="empty" v-if="showSpin==false && question_num == 0">
             <n-empty size="huge" description="啥也没有" />
         </div>
         <div class="column-container" v-else>
