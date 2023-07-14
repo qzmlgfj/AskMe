@@ -36,6 +36,8 @@ def login():
 @auth_bp.route("register", methods=["POST"])
 def register():
     try:
+        if Admin.check_admin_exists():
+            raise RuntimeError("Admin already exists")
         data = request.get_json()
         Admin.add(data["username"], data["password"])
         return jsonify({"status": "ok"})
@@ -50,3 +52,5 @@ def check_admin():
 # TODO Register时验证是否已存在Admin
 
 # TODO Token令牌加入IP字段，防止Token被盗用
+
+# TODO 注册管理员时由用户指定JWT密钥

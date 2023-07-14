@@ -22,11 +22,14 @@ def token_required(f):
             return jsonify(invalid_msg), 401
 
         try:
-            token = auth_headers[0]
-            data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
-            user = Admin.query.filter_by(username=data['username']).first()
+            user = Admin.query.first()
             if not user:
                 raise RuntimeError('User not found')
+            
+            token = auth_headers[0]
+            data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+            if data['username'] != user.username:
+                raise RuntimeError('User does not match')
             return f(*args, **kwargs)
         except jwt.ExpiredSignatureError:
             return jsonify(expired_msg), 401 # 401 is Unauthorized HTTP status code
