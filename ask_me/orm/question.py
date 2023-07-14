@@ -62,7 +62,7 @@ class Question(db.Model):
 
     @classmethod
     def get_by_id(cls, id):
-        return [cls.query.get(id)]
+        return cls.query.get(id)
 
     @classmethod
     def get_unanswered(cls):

@@ -40,7 +40,8 @@ def return_answered_questions():
 # 查看指定id问题
 @question_bp.route("/get_question/<question_id>", methods=["GET"])
 def return_question(question_id):
-    return jsonify(Question.get_by_id(question_id))
+    result = Question.get_by_id(question_id)
+    return jsonify([result]) if result else jsonify([])
 
 
 # 提交问题
