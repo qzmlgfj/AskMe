@@ -1,4 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
+import uuid
 
 from ..extensions import db
 
@@ -7,14 +8,17 @@ class Admin(db.Model):
     id: int
     username: str
     password_hash: str  # 密码Hash值
+    secret_key: str  # JWT密钥
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.Text)
     password_hash = db.Column(db.Text)
+    secret_key = db.Column(db.Text)
 
     def __init__(self, username, password):
         self.username = username
         self.password_hash = generate_password_hash(password)
+        self.secret_key = str(uuid.uuid4())
 
     @classmethod
     def get_by_username(cls, name):
