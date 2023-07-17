@@ -48,6 +48,7 @@ class Question(db.Model):
         question.content = content
         question.private = private
         question.answer = answer
+        question.answered = answer != ""
         db.session.commit()
 
     @classmethod

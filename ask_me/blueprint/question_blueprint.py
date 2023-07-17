@@ -8,12 +8,14 @@ question_bp = Blueprint("/api/question", __name__, url_prefix="/api/question")
 
 # 查看所有问题，参数为all
 @question_bp.route("all", methods=["GET"])
+@token_required
 def return_all_questions():
     return jsonify(Question.get_all())
 
 
 # 查看未回答问题，参数为unanswered
 @question_bp.route("unanswered", methods=["GET"])
+@token_required
 def return_unanswered_questions():
     return jsonify(Question.get_unanswered())
 

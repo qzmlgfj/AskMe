@@ -7,8 +7,8 @@
             <n-text>{{ poetry }}</n-text>
         </n-popover>
         <div style="min-width: 20%; display: flex;" v-if="!ifLogin && !isMobile">
-            <n-input v-model:value="questionId" round placeholder="请输入问题ID，回车键进行搜索" autosize clearable style="min-width: 90%"
-                @keyup="handleKeyUp" />
+            <n-input v-model:value="questionId" round placeholder="请输入问题ID，回车键进行搜索" autosize clearable
+                style="min-width: 90%" @keyup="handleKeyUp" />
         </div>
         <n-space :size="isMobile ? 'small' : 'medium'">
             <n-popover v-if="isMobile" trigger="click" @update:show="handleTitleUpdateShow">
@@ -148,13 +148,10 @@ export default {
         handleFilter() {
             if (this.$store.state.queryMode == "admin_answered") {
                 this.$store.commit("setQueryMode", "all");
-                this.queryText = "全部";
             } else if (this.$store.state.queryMode === "all") {
                 this.$store.commit("setQueryMode", "unanswered");
-                this.queryText = "未回复";
             } else {
                 this.$store.commit("setQueryMode", "admin_answered");
-                this.queryText = "已回复";
             }
             this.$store.commit("updateQuestion");
         }
@@ -170,6 +167,23 @@ export default {
                 if (val == "") {
                     this.$store.commit("setQueryMode", "unprivate_and_answered");
                     this.$store.commit("updateQuestion");
+                }
+            }
+        },
+        queryMode: {
+            handler: function (val) {
+                switch (val) {
+                    case "admin_answered":
+                        this.queryText = "已回复";
+                        break;
+                    case "all":
+                        this.queryText = "全部";
+                        break;
+                    case "unanswered":
+                        this.queryText = "未回复";
+                        break;
+                    default:
+                        break;
                 }
             }
         }

@@ -27,7 +27,7 @@ def token_required(f):
                 raise RuntimeError('User not found')
             
             token = auth_headers[0]
-            data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+            data = jwt.decode(token, user.secret_key, algorithms=['HS256'])
             if data['username'] != user.username:
                 raise RuntimeError('User does not match')
             return f(*args, **kwargs)
