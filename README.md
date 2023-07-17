@@ -10,4 +10,4 @@
 
 构建已于Pypi发布，可直接下载安装
 
-`$ pip install ask_me`
+`$ pip install ant_ask_me`
