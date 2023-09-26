@@ -88,6 +88,7 @@ export default {
         const { showEditQuestionModal } = inject("showEditQuestionModal");
         const ifLogin = computed(() => store.state.userName != "");
         const isMobile = computed(() => store.state.isMobile);
+        const updateFlag = computed(() => store.state.updateFlag);
 
         const switchAnswer = () => {
             showAnswer.value = !showAnswer.value;
@@ -105,9 +106,18 @@ export default {
             showAnswer,
             ifLogin,
             isMobile,
+            updateFlag,
             switchAnswer,
             handleAnswerQuestion,
             handleEditQuestion
+        }
+    },
+    watch: {
+        updateFlag: {
+            handler: function () {
+                this.showAnswer = false;
+            },
+            deep: true,
         }
     }
 }
