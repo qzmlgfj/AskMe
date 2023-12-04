@@ -199,7 +199,7 @@ body {
 }
 
 .n-layout-footer {
-    height: 10vh;
+    height: 5vh;
 }
 
 #add-btn {

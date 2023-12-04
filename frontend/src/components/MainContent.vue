@@ -94,7 +94,7 @@ export default {
 
 <style scoped>
 .empty {
-    min-height: 80vh;
+    min-height: 85vh;
     box-sizing: border-box;
     padding: 32px;
 
@@ -104,7 +104,7 @@ export default {
 }
 
 .column-container {
-    min-height: 80vh;
+    min-height: 85vh;
     box-sizing: border-box;
     padding: 32px;
 
