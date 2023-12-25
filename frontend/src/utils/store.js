@@ -37,6 +37,11 @@ const store = createStore({
         },
         setUnansweredNum(state, num) {
             state.unansweredNum = num;
+        },
+        initStateFromLocalStorage(state, userName) {
+            state.userName = userName;
+            state.queryMode = "unanswered";
+            state.updateFlag++;
         }
     }
 })

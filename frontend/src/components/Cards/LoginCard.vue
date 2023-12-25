@@ -81,6 +81,7 @@ export default {
                     store.commit("setUserName", formValue.value.user.username);
                     store.commit("setQueryMode", "unanswered");
                     store.commit("updateQuestion");
+                    localStorage.setItem("userName", formValue.value.user.username);
                     localStorage.setItem("token", res.data.token);
                     closeModal();
                 } else {

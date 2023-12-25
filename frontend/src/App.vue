@@ -116,6 +116,12 @@ export default {
             showModal.value = true;
         };
 
+        const initStateFromLocalStorage = () => {
+            if (localStorage.getItem("token") != null) {
+                store.commit("initStateFromLocalStorage", localStorage.getItem("userName"));
+            }
+        }
+
         provide("switchTheme", {
             isDaytime,
             switchTheme,
@@ -168,10 +174,12 @@ export default {
             cardName,
             setCardName,
             showAddQuestionModal,
+            initStateFromLocalStorage,
             handleResize,
         }
     },
     mounted() {
+        this.initStateFromLocalStorage();
         window.addEventListener("resize", this.handleResize);
     },
     beforeUnmount() {
