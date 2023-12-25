@@ -39,9 +39,7 @@ export default {
                         }
                     });
                 } else {
-                    this.$store.commit("clearUserName");
-                    this.$store.commit("setQueryMode", "unprivate_and_answered");
-                    this.$store.commit("updateQuestion");
+                    this.$store.commit("clearUserStateFromLocalStorage");
                 }
                 this.clickTimes = 0;
             }

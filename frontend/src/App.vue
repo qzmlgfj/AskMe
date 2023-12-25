@@ -118,7 +118,7 @@ export default {
 
         const initStateFromLocalStorage = () => {
             if (localStorage.getItem("token") != null) {
-                store.commit("initStateFromLocalStorage", localStorage.getItem("userName"));
+                store.commit("initUserStateFromLocalStorage");
             }
         }
 

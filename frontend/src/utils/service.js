@@ -13,14 +13,21 @@ const serviceDev = axios.create({
 
 const service = process.env.NODE_ENV === "development" ? serviceDev : serviceProd;
 
-service.interceptors.request.use(function(config) {
+service.interceptors.request.use(function (request) {
     // Header中添加token
     const token = localStorage.getItem("token");
     if (token) {
-        config.headers.token = token;
+        request.headers.token = token;
     }
-    return config;
+    return request;
 }, function (error) {
+    return Promise.reject(error);
+});
+
+service.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    localStorage.clear();
     return Promise.reject(error);
 });
 
