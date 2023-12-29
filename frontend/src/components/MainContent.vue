@@ -12,7 +12,7 @@
 <script>
 import { ref, computed } from 'vue';
 import { useStore } from "vuex";
-import { NEmpty, NSpin } from "naive-ui";
+import { NEmpty, NSpin, useMessage } from "naive-ui";
 
 import Column from './Column.vue';
 
@@ -26,6 +26,8 @@ export default {
         NSpin
     },
     setup() {
+        window.$message = useMessage();
+
         const store = useStore();
         const column_num = computed(() => store.state.columnNum);
         const column_lst = ref([]);

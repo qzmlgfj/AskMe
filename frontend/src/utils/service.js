@@ -27,7 +27,11 @@ service.interceptors.request.use(function (request) {
 service.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
-    localStorage.clear();
+    if (error.response.status === 401) {
+        window.$message.error('token失效，请重新登录');
+        localStorage.clear();
+        setInterval(location.reload(), 2000);
+    }
     return Promise.reject(error);
 });
 
