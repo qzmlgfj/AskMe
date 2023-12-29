@@ -18,7 +18,9 @@
                 </n-scrollbar>
                 <n-button id="add-btn" circle strong type="info" size="large" @click="showAddQuestionModal">
                     <template #icon>
-                        <playlist-add></playlist-add>
+                        <n-icon>
+                            <playlist-add />
+                        </n-icon>
                     </template>
                 </n-button>
                 <n-message-provider>
@@ -44,6 +46,7 @@ import {
     NScrollbar,
     darkTheme,
     NButton,
+    NIcon,
     NBackTop,
     NMessageProvider,
     NModal
@@ -66,6 +69,7 @@ export default {
         NLayoutFooter,
         NScrollbar,
         NButton,
+        NIcon,
         NBackTop,
         PlaylistAdd,
         NMessageProvider,
