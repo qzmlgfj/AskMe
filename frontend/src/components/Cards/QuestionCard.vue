@@ -35,13 +35,15 @@
                 </div>
             </n-space>
         </template>
-        {{ argv.content }}
-        <br>
-        <br>
+        <div class="text-area">
+            {{ argv.content }}
+            <br>
+            <br>
+        </div>
         <!-- TODO 考虑渲染一下ID -->
         <n-time :time="argv.created_at"></n-time>
         <template v-if="showAnswer" #footer>
-            <div v-if="argv.answered">
+            <div v-if="argv.answered" class="text-area">
                 {{ argv.answer }}
                 <br>
                 <br>
@@ -122,3 +124,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+    .text-area {
+        white-space: pre-wrap;
+    }
+</style>
