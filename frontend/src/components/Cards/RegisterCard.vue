@@ -1,5 +1,5 @@
 <template>
-    <n-card style="width: 400px" title="管理员注册" :bordered="false" size="huge" role="dialog" aria-modal="true"
+    <n-card style="width: 350px" title="管理员注册" :bordered="false" size="huge" role="dialog" aria-modal="true"
         footer-style="display:flex;justify-content:space-around;" :segmented="{content: true}" closable
         @close="closeModal">
         <n-space vertical>
