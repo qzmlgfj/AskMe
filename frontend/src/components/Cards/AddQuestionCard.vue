@@ -1,6 +1,6 @@
 <template>
     <n-card style="width: 400px" title="开始整蛊" :bordered="false" size="huge" role="dialog" aria-modal="true"
-        footer-style="display:flex;justify-content:space-around;" :segmented="{           content: true           }" closable
+        footer-style="display:flex;justify-content:space-around;" :segmented="{content: true}" closable
         @close="closeModal">
         <n-space vertical>
             <n-form ref="formRef" :model="formValue" :rules="rules">
@@ -17,7 +17,7 @@
             </n-form>
         </n-space>
         <template #footer>
-            <n-button type="primary" @click="handleAddQuestion">添加</n-button>
+            <n-button type="primary" @click="handleAddQuestion" :disabled="addBtnDisabled">添加</n-button>
             <n-button type="default" @click="closeModal">取消</n-button>
         </template>
     </n-card>
@@ -73,11 +73,13 @@ export default {
                 ],
             },
         };
+        const addBtnDisabled = ref(false);
 
         const handleAddQuestion = function (e) {
             e.preventDefault();
             formRef.value?.validate((errors) => {
                 if (!errors) {
+                    addBtnDisabled.value = true;
                     addQuestion(formValue.value.question).then(res => {
                         if (res.data.status == "ok") {
                             message.success(
@@ -104,6 +106,7 @@ export default {
             formRef,
             formValue,
             rules,
+            addBtnDisabled,
             handleAddQuestion
         };
     }
