@@ -215,7 +215,7 @@ body {
 }
 
 #add-btn {
-    position: absolute;
+    position: fixed;
     right: 32px;
     bottom: 32px;
 }
