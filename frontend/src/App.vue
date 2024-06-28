@@ -170,6 +170,12 @@ export default {
 
         handleResize();
 
+        const initTheme = () => {
+            isDaytime.value = window.matchMedia("(prefers-color-scheme: light)").matches;
+        }
+
+        initTheme();
+
         return {
             isDaytime,
             naiveTheme,

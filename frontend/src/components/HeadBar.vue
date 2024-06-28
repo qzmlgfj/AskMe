@@ -47,8 +47,8 @@
             <n-button quaternary @click="switchTheme" :size="isMobile ? 'medium' : 'large'">
                 <template #icon>
                     <n-icon>
-                        <sun v-if="isDaytime" />
-                        <moon v-else />
+                        <moon v-if="isDaytime" />
+                        <sun v-else />
                     </n-icon>
                 </template>
                 <template v-if="!isMobile">{{ theme }}</template>
