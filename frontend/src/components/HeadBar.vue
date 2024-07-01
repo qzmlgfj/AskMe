@@ -71,8 +71,7 @@ import { inject, computed, ref } from "vue";
 import { NH1, NPopover, NText, NSpace, NButton, NIcon, NBadge, NInput } from "naive-ui";
 import { Mail, MailForward, MailOpened, Refresh, BrandGithub, Sun, Moon, Search } from "@vicons/tabler";
 import { useStore } from "vuex";
-
-const jinrishici = require('jinrishici');
+import { load } from 'jinrishici';
 
 export default {
     name: 'HeadBar',
@@ -132,7 +131,7 @@ export default {
     methods: {
         handleTitleUpdateShow(show) {
             if (!show) {
-                jinrishici.load(result => {
+                load(result => {
                     this.poetry = result.data.content;
                 });
             }
@@ -157,7 +156,7 @@ export default {
         }
     },
     created() {
-        jinrishici.load(result => {
+        load(result => {
             this.poetry = result.data.content;
         });
     },

@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import { inject } from "vue";
 
 import AddQuestionCard from "./Cards/AddQuestionCard.vue";

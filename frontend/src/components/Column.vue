@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import QuestionCard from "./Cards/QuestionCard.vue";
 
 export default {
