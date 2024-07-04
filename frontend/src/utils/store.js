@@ -1,4 +1,4 @@
-import { createStore } from 'vuex';
+import { createStore } from "vuex";
 
 const store = createStore({
     state() {
@@ -10,7 +10,7 @@ const store = createStore({
             currentQuestion: null,
             isMobile: false,
             unansweredNum: 0,
-        }
+        };
     },
     mutations: {
         updateAlarmCount(state, count) {
@@ -48,8 +48,8 @@ const store = createStore({
             state.queryMode = "unprivate_and_answered";
             state.updateFlag++;
             localStorage.clear();
-        }
-    }
-})
+        },
+    },
+});
 
 export default store;

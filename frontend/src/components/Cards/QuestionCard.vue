@@ -1,8 +1,12 @@
 <template>
-    <n-card hoverable :title="argv.title" :segmented="{
-        content: true,
-        footer: 'soft'
-    }">
+    <n-card
+        hoverable
+        :title="argv.title"
+        :segmented="{
+            content: true,
+            footer: 'soft',
+        }"
+    >
         <template #header-extra>
             <n-space>
                 <n-button text strong @click="switchAnswer">
@@ -15,7 +19,12 @@
                 </n-button>
                 <div v-if="ifLogin">
                     <n-space>
-                        <n-button v-if="!argv.answered" text strong @click="handleAnswerQuestion">
+                        <n-button
+                            v-if="!argv.answered"
+                            text
+                            strong
+                            @click="handleAnswerQuestion"
+                        >
                             <template #icon>
                                 <n-icon>
                                     <cone />
@@ -37,16 +46,16 @@
         </template>
         <div class="text-area">
             {{ argv.content }}
-            <br>
-            <br>
+            <br />
+            <br />
         </div>
         <!-- TODO 考虑渲染一下ID -->
         <n-time :time="argv.created_at"></n-time>
         <template v-if="showAnswer" #footer>
             <div v-if="argv.answered" class="text-area">
                 {{ argv.answer }}
-                <br>
-                <br>
+                <br />
+                <br />
                 <n-time :time="argv.answered_at"></n-time>
             </div>
             <div v-else>
@@ -66,11 +75,10 @@
 import { ref, inject, computed } from "vue";
 import { useStore } from "vuex";
 import { NCard, NSpace, NButton, NIcon, NEmpty, NTime } from "naive-ui";
-import { Key, Activity, Cone, Pencil } from "@vicons/tabler"
+import { Key, Activity, Cone, Pencil } from "@vicons/tabler";
 
 export default {
-    name: 'QuestionCard',
-    props: ["argv"],
+    name: "QuestionCard",
     components: {
         NCard,
         NSpace,
@@ -81,8 +89,10 @@ export default {
         Key,
         Activity,
         Cone,
-        Pencil
+        Pencil,
     },
+    // eslint-disable-next-line vue/require-prop-types
+    props: ["argv"],
     setup(props) {
         const store = useStore();
         const showAnswer = ref(false);
@@ -111,8 +121,8 @@ export default {
             updateFlag,
             switchAnswer,
             handleAnswerQuestion,
-            handleEditQuestion
-        }
+            handleEditQuestion,
+        };
     },
     watch: {
         updateFlag: {
@@ -120,13 +130,13 @@ export default {
                 this.showAnswer = false;
             },
             deep: true,
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style scoped>
-    .text-area {
-        white-space: pre-wrap;
-    }
+.text-area {
+    white-space: pre-wrap;
+}
 </style>

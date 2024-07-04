@@ -5,7 +5,7 @@
                 <n-layout-header bordered>
                     <head-bar></head-bar>
                 </n-layout-header>
-                <n-scrollbar style="max-height: 90vh;">
+                <n-scrollbar style="max-height: 90vh">
                     <n-layout-content>
                         <n-message-provider>
                             <main-content></main-content>
@@ -16,7 +16,14 @@
                     </n-layout-footer>
                     <n-back-top :right="80" :bottom="30"></n-back-top>
                 </n-scrollbar>
-                <n-button id="add-btn" circle strong type="info" size="large" @click="showAddQuestionModal">
+                <n-button
+                    id="add-btn"
+                    circle
+                    strong
+                    type="info"
+                    size="large"
+                    @click="showAddQuestionModal"
+                >
                     <template #icon>
                         <n-icon>
                             <playlist-add />
@@ -49,7 +56,7 @@ import {
     NIcon,
     NBackTop,
     NMessageProvider,
-    NModal
+    NModal,
 } from "naive-ui";
 
 import { PlaylistAdd } from "@vicons/tabler";
@@ -60,7 +67,7 @@ import MainContent from "./components/MainContent.vue";
 import FootBar from "./components/FootBar.vue";
 
 export default {
-    name: 'App',
+    name: "App",
     components: {
         NLayout,
         NConfigProvider,
@@ -77,11 +84,11 @@ export default {
         Card,
         HeadBar,
         MainContent,
-        FootBar
+        FootBar,
     },
     setup() {
         const isDaytime = ref(true);
-        const naiveTheme = computed(() => isDaytime.value ? {} : darkTheme);
+        const naiveTheme = computed(() => (isDaytime.value ? {} : darkTheme));
         const showModal = ref(false);
         const cardName = ref("");
         const store = useStore();
@@ -124,36 +131,36 @@ export default {
             if (localStorage.getItem("token") != null) {
                 store.commit("initUserStateFromLocalStorage");
             }
-        }
+        };
 
         provide("switchTheme", {
             isDaytime,
             switchTheme,
-        })
+        });
 
         provide("closeModal", {
-            closeModal
-        })
+            closeModal,
+        });
 
         provide("cardName", {
-            cardName
-        })
+            cardName,
+        });
 
         provide("setCardName", {
-            setCardName
-        })
+            setCardName,
+        });
 
         provide("showAuthModal", {
-            showAuthModal
-        })
+            showAuthModal,
+        });
 
         provide("showAnswerQuestionModal", {
-            showAnswerQuestionModal
-        })
+            showAnswerQuestionModal,
+        });
 
         provide("showEditQuestionModal", {
-            showEditQuestionModal
-        })
+            showEditQuestionModal,
+        });
 
         const windowWidth = ref(document.documentElement.clientWidth);
         const windowHeight = ref(document.documentElement.clientHeight);
@@ -166,13 +173,15 @@ export default {
             } else {
                 store.commit("setIsMobile", false);
             }
-        }
+        };
 
         handleResize();
 
         const initTheme = () => {
-            isDaytime.value = window.matchMedia("(prefers-color-scheme: light)").matches;
-        }
+            isDaytime.value = window.matchMedia(
+                "(prefers-color-scheme: light)",
+            ).matches;
+        };
 
         initTheme();
 
@@ -186,7 +195,7 @@ export default {
             showAddQuestionModal,
             initStateFromLocalStorage,
             handleResize,
-        }
+        };
     },
     mounted() {
         this.initStateFromLocalStorage();
@@ -194,16 +203,23 @@ export default {
     },
     beforeUnmount() {
         window.removeEventListener("resize", this.handleResize);
-    }
-}
+    },
+};
 </script>
 
 <style>
 body {
     box-sizing: border-box;
     margin: 0;
-    font-family: v-sans, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    font-family:
+        v-sans,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif,
+        "Apple Color Emoji",
+        "Segoe UI Emoji",
         "Segoe UI Symbol";
 }
 

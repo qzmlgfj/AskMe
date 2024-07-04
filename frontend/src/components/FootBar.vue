@@ -1,6 +1,8 @@
 <template>
     <div class="foot-bar">
-        <n-text depth="3" @click="handleClick">AskMe! {{ version }} · Made by Ant</n-text>
+        <n-text depth="3" @click="handleClick"
+            >AskMe! {{ version }} · Made by Ant</n-text
+        >
     </div>
 </template>
 
@@ -9,10 +11,11 @@ import { NText } from "naive-ui";
 
 import { getVersion, checkAdminExists } from "@/utils/request";
 export default {
-    name: 'FooterBar',
+    name: "FooterBar",
     components: {
-        NText
+        NText,
     },
+    inject: ["showAuthModal"],
     data() {
         return {
             version: "",
@@ -24,7 +27,6 @@ export default {
             this.version = res.data;
         });
     },
-    inject: ["showAuthModal"],
     methods: {
         handleClick() {
             this.clickTimes++;
@@ -43,8 +45,8 @@ export default {
                 }
                 this.clickTimes = 0;
             }
-        }
-    }
+        },
+    },
 };
 </script>
 

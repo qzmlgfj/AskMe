@@ -7,14 +7,13 @@ import EditQuestionCard from "./Cards/EditQuestionCard.vue";
 import LoginCard from "./Cards/LoginCard.vue";
 import RegisterCard from "./Cards/RegisterCard.vue";
 
-
 export default {
     name: "Modal",
     components: {
         AddQuestionCard,
         LoginCard,
         RegisterCard,
-        AnswerQuestionCard
+        AnswerQuestionCard,
     },
     setup() {
         const { cardName } = inject("cardName");
@@ -36,16 +35,10 @@ export default {
 
         return {
             selectCard,
-        }
+        };
     },
     render() {
-        return (
-            <div>
-                {
-                    this.selectCard()
-                }
-            </div>
-        )
-    }
-}
+        return <div>{this.selectCard()}</div>;
+    },
+};
 </script>

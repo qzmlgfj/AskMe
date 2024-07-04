@@ -4,21 +4,21 @@ function getVersion() {
     return service({
         method: "get",
         url: "/api/version",
-    })
+    });
 }
 
 function getQuestions(mode) {
     return service({
         method: "get",
         url: "/api/question/" + mode,
-    })
+    });
 }
 
 function getUnansweredQuestionsNum() {
     return service({
         method: "get",
         url: "/api/question/unanswered_num",
-    })
+    });
 }
 
 function addQuestion(data) {
@@ -26,7 +26,7 @@ function addQuestion(data) {
         method: "post",
         url: "/api/question/add",
         data: data,
-    })
+    });
 }
 
 function answerQuestion(data) {
@@ -34,7 +34,7 @@ function answerQuestion(data) {
         method: "POST",
         url: "/api/question/answer",
         data: data,
-    })
+    });
 }
 
 function deleteQuestion(data) {
@@ -42,7 +42,7 @@ function deleteQuestion(data) {
         method: "POST",
         url: "/api/question/delete",
         data: data,
-    })
+    });
 }
 
 function editQuestion(data) {
@@ -50,7 +50,7 @@ function editQuestion(data) {
         method: "POST",
         url: "/api/question/edit",
         data: data,
-    })
+    });
 }
 
 function login(data) {
@@ -58,7 +58,7 @@ function login(data) {
         method: "POST",
         url: "/api/auth/login",
         data: data,
-    })
+    });
 }
 
 function register(data) {
@@ -66,21 +66,21 @@ function register(data) {
         method: "POST",
         url: "/api/auth/register",
         data: data,
-    })
+    });
 }
 
 function getCurrentUser() {
     return service({
         method: "GET",
         url: "/api/auth/currentuser",
-    })
+    });
 }
 
 function checkAdminExists() {
     return service({
         method: "GET",
         url: "/api/auth/checkadmin",
-    })
+    });
 }
 
 export {

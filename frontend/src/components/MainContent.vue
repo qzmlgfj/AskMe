@@ -1,29 +1,33 @@
 <template>
     <n-spin :show="showSpin">
-        <div class="empty" v-if="showSpin==false && question_num == 0">
+        <div v-if="showSpin == false && question_num == 0" class="empty">
             <n-empty size="huge" description="啥也没有" />
         </div>
-        <div class="column-container" v-else>
-            <column v-for="(item, index) in column_lst" :argv="item" :key="index" />
+        <div v-else class="column-container">
+            <column
+                v-for="(item, index) in column_lst"
+                :key="index"
+                :argv="item"
+            />
         </div>
     </n-spin>
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { NEmpty, NSpin, useMessage } from "naive-ui";
 
-import Column from './Column.vue';
+import Column from "./Column.vue";
 
 import { getQuestions, getUnansweredQuestionsNum } from "@/utils/request";
 
 export default {
-    name: 'MainContent',
+    name: "MainContent",
     components: {
         Column,
         NEmpty,
-        NSpin
+        NSpin,
     },
     setup() {
         window.$message = useMessage();
@@ -43,9 +47,11 @@ export default {
                 column_lst.value.push([]);
             }
             for (let i = 0; i < question_data.value.length; i++) {
-                column_lst.value[i % column_num.value].push(question_data.value[i]);
+                column_lst.value[i % column_num.value].push(
+                    question_data.value[i],
+                );
             }
-        }
+        };
 
         const getData = function () {
             showSpin.value = true;
@@ -58,11 +64,11 @@ export default {
                 });
                 distribute_data(question_data);
                 showSpin.value = false;
-            })
+            });
             getUnansweredQuestionsNum().then((res) => {
-                store.commit('setUnansweredNum', res.data.num);
-            })
-        }
+                store.commit("setUnansweredNum", res.data.num);
+            });
+        };
 
         getData();
 
@@ -75,7 +81,7 @@ export default {
             showSpin,
             distribute_data,
             getData,
-        }
+        };
     },
     watch: {
         column_num: {
@@ -89,9 +95,9 @@ export default {
                 this.getData();
             },
             deep: true,
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style scoped>
