@@ -28,7 +28,7 @@
                 <n-button quaternary @click="handleFilter" :size="isMobile ? 'medium' : 'large'">
                     <template #icon>
                         <n-icon>
-                            <mail-opened v-if="queryMode == 'answered'" />
+                            <mail-opened v-if="queryMode == 'admin_answered'" />
                             <mail-forward v-else-if="queryMode == 'unanswered'" />
                             <mail v-else />
                         </n-icon>
