@@ -8,7 +8,8 @@
         </n-popover>
         <div style="min-width: 20%; display: flex;" v-if="!ifLogin && !isMobile">
             <n-input v-model:value="questionId" round placeholder="请输入问题ID，回车键进行搜索" autosize clearable
-                style="min-width: 90%" @keyup="handleKeyUp" />
+                style="min-width: 90%" @keypress="event=>{if(event.code=='Enter')handleSearch()}" 
+            />
         </div>
         <n-space :size="isMobile ? 'small' : 'medium'">
             <n-popover v-if="isMobile" trigger="click" @update:show="handleTitleUpdateShow">
@@ -22,7 +23,9 @@
                         <template v-if="!isMobile">搜索</template>
                     </n-button>
                 </template>
-                <n-input v-model:value="questionId" round placeholder="请输入问题ID" clearable @keyup="handleKeyUp" />
+                <n-input v-model:value="questionId" round placeholder="请输入问题ID" clearable 
+                    @keypress="event=>{if(event.code=='Enter')handleSearch()}" 
+                />
             </n-popover>
             <n-badge :value="unansweredNum" type="success" v-if="ifLogin">
                 <n-button quaternary @click="handleFilter" :size="isMobile ? 'medium' : 'large'">

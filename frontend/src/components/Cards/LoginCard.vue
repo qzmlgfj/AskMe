@@ -9,7 +9,9 @@
                 </n-form-item>
                 <n-form-item label="密码" path="user.password">
                     <n-input v-model:value="formValue.user.password" type="password" show-password-on="click"
-                        placeholder="输入密码" />
+                        placeholder="输入密码" 
+                        @keypress="event => {if (event.key === 'Enter') handleLogin()}"
+                    />
                 </n-form-item>
                 <n-form-item path="user.rememberme">
                     <n-checkbox v-model:checked="formValue.user.remember">记住我</n-checkbox>
