@@ -32,6 +32,7 @@ class Question(db.Model):
         self.title = title
         self.content = content
         self.private = private
+        # datetime.UTC于Python3.11引入，3.10及以下版本仍使用datetime.utcnow()
         self.created_at = datetime.utcnow().replace(microsecond=0)
 
     @classmethod
@@ -86,5 +87,6 @@ class Question(db.Model):
         question = cls.query.get(id)
         question.answered = True
         question.answer = answer
+        # datetime.UTC于Python3.11引入，3.10及以下版本仍使用datetime.utcnow()
         question.answered_at = datetime.utcnow().replace(microsecond=0)
         db.session.commit()
