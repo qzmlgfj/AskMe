@@ -21,6 +21,7 @@ def login():
             user = Admin.query.first()
             if user is None:
                 raise RuntimeError("User not found")
+            # datetime.UTC于Python3.11引入，3.10及以下版本仍使用datetime.utcnow()
             token = jwt.encode(
                 {
                     "username": data["username"],
@@ -33,7 +34,7 @@ def login():
         else:
             return jsonify({"authenticated": False})
     except Exception as e:
-        print(e)
+        current_app.logger.error(e)
         return jsonify({"status": "fail"})
 
 
@@ -46,6 +47,7 @@ def register():
         Admin.add(data["username"], data["password"])
         return jsonify({"status": "ok"})
     except Exception as e:
+        current_app.logger.error(e)
         return jsonify({"status": "fail"})
 
 

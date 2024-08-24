@@ -34,7 +34,7 @@ def token_required(f):
         except jwt.ExpiredSignatureError:
             return jsonify(expired_msg), 401 # 401 is Unauthorized HTTP status code
         except (jwt.InvalidTokenError, Exception) as e:
-            print(e)
+            current_app.logger.error(e)
             return jsonify(invalid_msg), 401
 
     return _verify
