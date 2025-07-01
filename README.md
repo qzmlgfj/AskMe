@@ -1,3 +1,9 @@
+<div align="center">
+  <a href="https://deepwiki.com/qzmlgfj/AskMe">
+    <img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki">
+  </a>
+</div>
+
 # AskMe
 
 为了追随早已远去的潮流，写个匿名提问箱。
