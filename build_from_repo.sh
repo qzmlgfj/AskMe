@@ -2,6 +2,12 @@
 
 set -e
 
+# 配置集中管理
+REPO_DIR="${REPO_DIR:-$HOME/repo/AskMe}"
+DEPLOY_DIR="${DEPLOY_DIR:-$HOME/askme}"
+PORT="${PORT:-5000}"
+APP_MODULE="ask_me:create_app()"
+
 # 颜色与状态提示函数
 color_echo() {
     local color="$1"
@@ -21,6 +27,26 @@ color_echo() {
     echo -e "\e[1;${code}m${prefix} $message\e[0m"
 }
 
+# 统一的目录切换函数
+cd_safe() {
+    cd "$1" || { color_echo "red" "进入目录 $1 失败"; return 1; }
+}
+
+# 统一的虚拟环境管理
+activate_venv() {
+    source "$1/venv/bin/activate" || { color_echo "red" "虚拟环境激活失败: $1"; return 1; }
+}
+
+# 安全执行命令
+exec_safe() {
+    local cmd="$1"
+    local error_msg="$2"
+    if ! eval "$cmd"; then
+        color_echo "red" "$error_msg"
+        return 1
+    fi
+}
+
 # 错误处理
 cleanup() {
     local exit_code="$?"
@@ -32,68 +58,67 @@ cleanup() {
 }
 trap cleanup EXIT
 
-clear
-color_echo "cyan" "🚀 正在部署 AskMe 项目..."
+# 主要部署流程
+main() {
+    clear
+    color_echo "cyan" "🚀 正在部署 AskMe 项目..."
 
-# === 拉取代码 ===
-echo -e "\n\e[1;36m========== 🔁 拉取最新代码 ==========\e[0m"
-cd ~/repo/AskMe || { color_echo "red" "进入项目目录失败。"; exit 1; }
-git pull origin master || { color_echo "red" "git pull 失败。"; exit 1; }
-color_echo "green" "代码更新完成。"
+    # === 拉取代码 ===
+    echo -e "\n\e[1;36m========== 🔁 拉取最新代码 ==========\e[0m"
+    cd_safe "$REPO_DIR" || return 1
+    exec_safe "git pull origin master" "git pull 失败" || return 1
+    color_echo "green" "代码更新完成。"
 
-# === 启用 Python 虚拟环境 ===
-echo -e "\n\e[1;36m========== 🐍 启用 Python 虚拟环境 ==========\e[0m"
-source venv/bin/activate || { color_echo "red" "虚拟环境激活失败。"; exit 1; }
-color_echo "green" "虚拟环境已激活。"
+    # === 启用 Python 虚拟环境并安装依赖 ===
+    echo -e "\n\e[1;36m========== 🐍 启用 Python 虚拟环境 ==========\e[0m"
+    activate_venv "$REPO_DIR" || return 1
+    color_echo "green" "虚拟环境已激活。"
 
-# === 安装 Python 依赖 ===
-echo -e "\n\e[1;36m========== 📦 安装后端依赖 ==========\e[0m"
-pip3 install -r requirements.txt || { color_echo "red" "pip 安装依赖失败。"; exit 1; }
-color_echo "green" "后端依赖安装完成。"
+    echo -e "\n\e[1;36m========== 📦 安装后端依赖 ==========\e[0m"
+    exec_safe "pip install -r requirements.txt" "pip 安装依赖失败" || return 1
+    color_echo "green" "后端依赖安装完成。"
 
-# === 前端构建 ===
-echo -e "\n\e[1;36m========== 🛠️ 安装并构建前端 ==========\e[0m"
-cd frontend
-npm install || { color_echo "red" "npm install 失败。"; exit 1; }
-color_echo "green" "npm install 完成。"
+    # === 前端构建 ===
+    echo -e "\n\e[1;36m========== 🛠️ 安装并构建前端 ==========\e[0m"
+    cd_safe "$REPO_DIR/frontend" || return 1
+    exec_safe "npm ci" "npm install 失败" || return 1
+    color_echo "green" "npm install 完成。"
 
-npm run build || { color_echo "red" "npm build 构建失败。"; exit 1; }
-color_echo "green" "前端构建完成。"
-cd ..
+    exec_safe "npm run build" "npm build 构建失败" || return 1
+    color_echo "green" "前端构建完成。"
+    cd_safe "$REPO_DIR" || return 1
 
-# === 构建 Python 分发包 ===
-echo -e "\n\e[1;36m========== 📦 构建 .whl 包 ==========\e[0m"
-rm -rf dist/*
-python setup.py sdist bdist_wheel || { color_echo "red" "构建 .whl 包失败。"; exit 1; }
-color_echo "green" ".whl 构建成功。"
+    # === 构建 Python 分发包 ===
+    echo -e "\n\e[1;36m========== 📦 构建 .whl 包 ==========\e[0m"
+    rm -rf dist/*
+    exec_safe "python setup.py bdist_wheel" "构建 .whl 包失败" || return 1
+    color_echo "green" ".whl 构建成功。"
 
-# === 拷贝并安装新包 ===
-echo -e "\n\e[1;36m========== 📁 拷贝新包并安装 ==========\e[0m"
-rm -rf ~/askme/*.whl
-cp dist/*.whl ~/askme/
-color_echo "green" "包已拷贝到 ~/askme/"
+    # === 部署到目标目录 ===
+    echo -e "\n\e[1;36m========== 📁 部署新包 ==========\e[0m"
+    activate_venv "$DEPLOY_DIR" || return 1
+    exec_safe "pip install --force-reinstall '$REPO_DIR'/dist/*.whl" ".whl 安装失败" || return 1
+    color_echo "green" ".whl 安装完成。"
 
-deactivate
+    # === 重启服务 ===
+    echo -e "\n\e[1;36m========== ☠️ 检查并重启服务 ==========\e[0m"
+    if pkill -f "gunicorn.*$APP_MODULE" 2>/dev/null; then
+        color_echo "yellow" "已终止旧的 gunicorn 进程"
+    else
+        color_echo "blue" "未发现运行中的服务进程"
+    fi
 
-cd ~/askme/
-source venv/bin/activate
-pip3 install --force-reinstall *.whl || { color_echo "red" ".whl 安装失败。"; exit 1; }
-color_echo "green" ".whl 安装完成。"
+    echo -e "\n\e[1;36m========== 🚀 启动服务 ==========\e[0m"
+    cd_safe "$DEPLOY_DIR" || return 1
+    exec_safe "gunicorn -b '127.0.0.1:$PORT' -D --log-file './askme.log' '$APP_MODULE'" "服务启动失败" || return 1
+    color_echo "green" "服务启动成功，监听端口 $PORT 🎉"
+}
 
-# === 杀死旧进程 ===
-echo -e "\n\e[1;36m========== ☠️ 检查端口并关闭旧进程 ==========\e[0m"
-if pids=$(lsof -ti:5000); [ -n "$pids" ]; then
-    color_echo "yellow" "检测到端口 5000 被占用，进程号：$pids"
-    kill $pids
-    color_echo "green" "已终止旧进程。"
-else
-    color_echo "blue" "端口 5000 当前未被占用。"
+# 执行主函数并处理错误
+if ! main "$@"; then
+    color_echo "red" "部署过程中遇到错误，请检查上方日志信息"
+    exit 1
 fi
-
-# === 启动服务 ===
-echo -e "\n\e[1;36m========== 🚀 启动服务 ==========\e[0m"
-gunicorn -b 127.0.0.1:5000 -D --log-file "./askme.log" "ask_me:create_app()" || { color_echo "red" "服务启动失败。"; exit 1; }
-color_echo "green" "服务启动成功，监听端口 5000 🎉"
 
 trap - EXIT
 set +e

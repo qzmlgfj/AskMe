@@ -16,3 +16,4 @@ SQLAlchemy==2.0.30
 typing-extensions==4.11.0
 werkzeug==3.0.3
 zipp==3.18.2
+setuptools==80.9.0
