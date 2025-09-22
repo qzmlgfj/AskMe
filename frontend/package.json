@@ -16,7 +16,7 @@
     ]
   },
   "dependencies": {
-    "axios": "^1.11.0",
+    "axios": "^1.12.0",
     "core-js": "^3.44.0",
     "jinrishici": "^1.0.6",
     "vue": "^3.5.18",
