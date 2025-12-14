@@ -8,6 +8,14 @@ DEPLOY_DIR="${DEPLOY_DIR:-$HOME/askme}"
 PORT="${PORT:-5000}"
 APP_MODULE="ask_me:create_app()"
 
+# DOCKER 相关配置
+DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME:-askme:latest}"
+REGISTRY="${REGISTRY:-}"
+NAMESPACE="${NAMESPACE:-antrol}"
+IMAGE_BASENAME="${IMAGE_BASENAME:-askme}"  
+ENV_SUFFIX="${ENV_SUFFIX:-dev}"
+
+
 # 颜色与状态提示函数
 color_echo() {
     local color="$1"
@@ -58,6 +66,18 @@ cleanup() {
 }
 trap cleanup EXIT
 
+get_package_version() {
+    python - << 'EOF'
+import pathlib, re
+
+init_path = pathlib.Path("ask_me/__init__.py")
+text = init_path.read_text(encoding="utf-8")
+
+m = re.search(r"""__version__\s*=\s*['"]([^'"]+)['"]""", text)
+print(m.group(1) if m else "0.0.0")
+EOF
+}
+
 # 主要部署流程
 main() {
     clear
@@ -94,24 +114,48 @@ main() {
     exec_safe "python setup.py bdist_wheel" "构建 .whl 包失败" || return 1
     color_echo "green" ".whl 构建成功。"
 
-    # === 部署到目标目录 ===
-    echo -e "\n\e[1;36m========== 📁 部署新包 ==========\e[0m"
-    activate_venv "$DEPLOY_DIR" || return 1
-    exec_safe "pip install --force-reinstall '$REPO_DIR'/dist/*.whl" ".whl 安装失败" || return 1
-    color_echo "green" ".whl 安装完成。"
-
-    # === 重启服务 ===
-    echo -e "\n\e[1;36m========== ☠️ 检查并重启服务 ==========\e[0m"
-    if pkill -f "gunicorn.*$APP_MODULE" 2>/dev/null; then
-        color_echo "yellow" "已终止旧的 gunicorn 进程"
+     # === 读取版本号，生成规范镜像名 ===
+    VERSION="$(get_package_version)"
+    if [ -z "$VERSION" ]; then
+        VERSION="0.0.0"
+    fi
+    if [ -n "$REGISTRY" ]; then
+        DOCKER_IMAGE_NAME="${REGISTRY}/${NAMESPACE}/${IMAGE_BASENAME}:${VERSION}-${ENV_SUFFIX}"
     else
-        color_echo "blue" "未发现运行中的服务进程"
+        DOCKER_IMAGE_NAME="${NAMESPACE}/${IMAGE_BASENAME}:${VERSION}-${ENV_SUFFIX}"
+    fi
+    color_echo "white" "当前包版本: $VERSION"
+    color_echo "white" "规范 Docker 镜像名: $DOCKER_IMAGE_NAME"
+    # ===（可选）构建 Docker 镜像 ===
+    if [ "$BUILD_DOCKER_IMAGE" = "1" ]; then
+        echo -e "\n\e[1;36m========== 🐳 构建 Docker 镜像 ==========\\e[0m"
+        exec_safe "docker build -t '$DOCKER_IMAGE_NAME' '$REPO_DIR'" "Docker 镜像构建失败" || return 1
+        color_echo "green" "Docker 镜像构建完成：$DOCKER_IMAGE_NAME"
+    else
+        color_echo "blue" "跳过 Docker 镜像构建（如需构建，设置 BUILD_DOCKER_IMAGE=1）"
     fi
 
-    echo -e "\n\e[1;36m========== 🚀 启动服务 ==========\e[0m"
-    cd_safe "$DEPLOY_DIR" || return 1
-    exec_safe "gunicorn -b '127.0.0.1:$PORT' -D --log-file './askme.log' '$APP_MODULE'" "服务启动失败" || return 1
-    color_echo "green" "服务启动成功，监听端口 $PORT 🎉"
+
+    # === 部署到目标目录 ===
+    if [ "$BUILD_DOCKER_IMAGE" != "1" ]; then
+        echo -e "\n\e[1;36m========== 📁 部署新包 ==========\e[0m"
+        activate_venv "$DEPLOY_DIR" || return 1
+        exec_safe "pip install --force-reinstall '$REPO_DIR'/   dist/*.whl" ".whl 安装失败" || return 1
+        color_echo "green" ".whl 安装完成。"
+
+        # === 重启服务 ===
+        echo -e "\n\e[1;36m========== ☠️ 检查并重启服务     ==========\e[0m"
+        if pkill -f "gunicorn.*$APP_MODULE" 2>/dev/null; then
+            color_echo "yellow" "已终止旧的 gunicorn 进程"
+        else
+            color_echo "blue" "未发现运行中的服务进程"
+        fi
+
+        echo -e "\n\e[1;36m========== 🚀 启动服务 ==========\e[0m"
+        cd_safe "$DEPLOY_DIR" || return 1
+        exec_safe "gunicorn -b '127.0.0.1:$PORT' -D --log-file  './askme.log' '$APP_MODULE'" "服务启动失败" || return 1
+        color_echo "green" "服务启动成功，监听端口 $PORT 🎉"
+    fi
 }
 
 # 执行主函数并处理错误

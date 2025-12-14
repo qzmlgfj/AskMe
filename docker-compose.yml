@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  askme:
+    image: antrol/askme:latest
+    container_name: askme
+    restart: unless-stopped
+
+    ports:
+      - "5000:5000"
+
+    volumes:
+      - /data/askme-instance:/usr/local/var/ask_me-instance/
+
+    environment:
+      - TZ=Asia/Shanghai
