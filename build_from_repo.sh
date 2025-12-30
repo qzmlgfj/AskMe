@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set -e
+# 移除 set -e，改用自定义错误处理机制
+# set -e 会导致 SSH 连接直接断掉
 
 # 配置集中管理
 REPO_DIR="${REPO_DIR:-$HOME/repo/AskMe}"
@@ -42,7 +43,7 @@ cd_safe() {
 
 # 统一的虚拟环境管理
 activate_venv() {
-    source "$1/venv/bin/activate" || { color_echo "red" "虚拟环境激活失败: $1"; return 1; }
+    source "$1/venv/bin/activate" 2>/dev/null || { color_echo "red" "虚拟环境激活失败: $1"; return 1; }
 }
 
 # 安全执行命令
@@ -53,6 +54,7 @@ exec_safe() {
         color_echo "red" "$error_msg"
         return 1
     fi
+    return 0
 }
 
 # 错误处理
@@ -62,7 +64,6 @@ cleanup() {
         color_echo "red" "脚本执行中断，退出码：$exit_code"
         echo -e "\e[1;31m请检查上方日志信息排查问题。\e[0m"
     fi
-    set +e
 }
 trap cleanup EXIT
 
@@ -128,7 +129,7 @@ main() {
     color_echo "white" "规范 Docker 镜像名: $DOCKER_IMAGE_NAME"
     # ===（可选）构建 Docker 镜像 ===
     if [ "$BUILD_DOCKER_IMAGE" = "1" ]; then
-        echo -e "\n\e[1;36m========== 🐳 构建 Docker 镜像 ==========\\e[0m"
+        echo -e "\n\e[1;36m========== 🐳 构建 Docker 镜像 ==========\e[0m"
         exec_safe "docker build -t '$DOCKER_IMAGE_NAME' '$REPO_DIR'" "Docker 镜像构建失败" || return 1
         color_echo "green" "Docker 镜像构建完成：$DOCKER_IMAGE_NAME"
     else
@@ -140,7 +141,7 @@ main() {
     if [ "$BUILD_DOCKER_IMAGE" != "1" ]; then
         echo -e "\n\e[1;36m========== 📁 部署新包 ==========\e[0m"
         activate_venv "$DEPLOY_DIR" || return 1
-        exec_safe "pip install --force-reinstall '$REPO_DIR'/   dist/*.whl" ".whl 安装失败" || return 1
+        exec_safe "pip install --force-reinstall '$REPO_DIR'/dist/*.whl" ".whl 安装失败" || return 1
         color_echo "green" ".whl 安装完成。"
 
         # === 重启服务 ===
@@ -153,7 +154,7 @@ main() {
 
         echo -e "\n\e[1;36m========== 🚀 启动服务 ==========\e[0m"
         cd_safe "$DEPLOY_DIR" || return 1
-        exec_safe "gunicorn -b '127.0.0.1:$PORT' -D --log-file  './askme.log' '$APP_MODULE'" "服务启动失败" || return 1
+        exec_safe "gunicorn -b '127.0.0.1:$PORT' -D --log-file './askme.log' '$APP_MODULE'" "服务启动失败" || return 1
         color_echo "green" "服务启动成功，监听端口 $PORT 🎉"
     fi
 }
@@ -165,4 +166,3 @@ if ! main "$@"; then
 fi
 
 trap - EXIT
-set +e
