@@ -17,3 +17,5 @@
 构建已于Pypi发布，可直接下载安装
 
 `$ pip install ant_ask_me`
+
+现提供Docker部署手段，详情参考`docker-compose.yml`
