@@ -18,14 +18,18 @@ export default {
     inject: ["showAuthModal"],
     data() {
         return {
-            version: "",
+            version: import.meta.env.VITE_APP_VERSION || "",
             clickTimes: 0,
         };
     },
     mounted() {
-        getVersion().then((res) => {
-            this.version = res.data;
-        });
+        getVersion()
+            .then((res) => {
+                this.version = res.data;
+            })
+            .catch(() => {
+                // ignore: fallback to VITE_APP_VERSION
+            });
     },
     methods: {
         handleClick() {

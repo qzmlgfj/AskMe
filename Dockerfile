@@ -1,8 +1,15 @@
 FROM python:3.11-slim
 
+ARG APP_VERSION=0.0.0
+
+LABEL org.opencontainers.image.title="AskMe" \
+    org.opencontainers.image.version=$APP_VERSION
+
 ENV TZ=Asia/Shanghai \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
+
+ENV ASKME_VERSION=$APP_VERSION
 
 WORKDIR /app
 

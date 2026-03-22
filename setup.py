@@ -1,10 +1,20 @@
 from setuptools import setup, find_packages
 
-from ask_me import __version__
+from pathlib import Path
+import re
+
+
+def read_version():
+    version_file = Path(__file__).parent / "ask_me" / "version.py"
+    text = version_file.read_text(encoding="utf-8")
+    m = re.search(r"__version__\s*=\s*['\"]([^'\"]+)['\"]", text)
+    if not m:
+        raise RuntimeError("Unable to find __version__ in ask_me/version.py")
+    return m.group(1)
 
 setup(
     name="ant_ask_me",
-    version=__version__,
+    version=read_version(),
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,

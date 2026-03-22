@@ -9,7 +9,7 @@ from .extensions import db
 from .blueprint.question_blueprint import question_bp
 from .blueprint.auth_blueprint import auth_bp
 
-__version__ = "1.2.0"
+from .version import __version__
 
 
 def create_app(*, is_test=False):
