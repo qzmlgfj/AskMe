@@ -107,6 +107,21 @@ get_docker_image_name() {
     fi
 }
 
+# 探测 docker 是否需要 sudo；结果缓存在 DOCKER_CMD
+get_docker_cmd() {
+    if docker info > /dev/null 2>&1; then
+        echo "docker"
+    elif sudo -n docker info > /dev/null 2>&1; then
+        # 有免密 sudo
+        echo "sudo docker"
+    else
+        # 需要输入密码：主动触发一次 sudo 认证，之后复用凭证
+        color_echo "yellow" "当前用户无 Docker 权限，需要 sudo 密码："
+        sudo docker info > /dev/null || { color_echo "red" "sudo 认证失败或 Docker 不可用"; return 1; }
+        echo "sudo docker"
+    fi
+}
+
 build_frontend() {
     local version="$1"
     cd_safe "$REPO_DIR/frontend" || return 1
@@ -157,7 +172,9 @@ main() {
 
     # ===（可选）构建 Docker 镜像 ===
     if [ "$BUILD_DOCKER_IMAGE" = "1" ]; then
-        run_step "🐳 构建 Docker 镜像" "docker build --build-arg APP_VERSION='${VERSION}' -t '${DOCKER_IMAGE_NAME}' '${REPO_DIR}'" "Docker 镜像构建失败" || return 1
+        local docker_cmd
+        docker_cmd="$(get_docker_cmd)" || return 1
+        run_step "🐳 构建 Docker 镜像" "${docker_cmd} build --build-arg APP_VERSION='${VERSION}' -t '${DOCKER_IMAGE_NAME}' '${REPO_DIR}'" "Docker 镜像构建失败" || return 1
         color_echo "green" "Docker 镜像构建完成：$DOCKER_IMAGE_NAME"
     else
         color_echo "blue" "跳过 Docker 镜像构建（如需构建，设置 BUILD_DOCKER_IMAGE=1）"
