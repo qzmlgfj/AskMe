@@ -49,6 +49,39 @@
                     "
                 />
             </n-popover>
+            <n-button
+                v-if="ifLogin"
+                quaternary
+                :size="isMobile ? 'medium' : 'large'"
+                @click="handleExport"
+            >
+                <template #icon>
+                    <n-icon>
+                        <download />
+                    </n-icon>
+                </template>
+                <template v-if="!isMobile">导出</template>
+            </n-button>
+            <n-button
+                v-if="ifLogin"
+                quaternary
+                :size="isMobile ? 'medium' : 'large'"
+                @click="triggerImport"
+            >
+                <template #icon>
+                    <n-icon>
+                        <upload />
+                    </n-icon>
+                </template>
+                <template v-if="!isMobile">导入</template>
+            </n-button>
+            <input
+                ref="fileInput"
+                type="file"
+                accept=".json"
+                style="display: none"
+                @change="handleImport"
+            />
             <n-badge v-if="ifLogin" :value="unansweredNum" type="success">
                 <n-button
                     quaternary
@@ -130,9 +163,12 @@ import {
     BrandGithub,
     Sun,
     Moon,
+    Download,
+    Upload,
 } from "@vicons/tabler";
 import { useStore } from "vuex";
 import { load } from "jinrishici";
+import { exportQuestions, importQuestions } from "@/utils/request";
 
 export default {
     name: "HeadBar",
@@ -152,6 +188,8 @@ export default {
         BrandGithub,
         Sun,
         Moon,
+        Download,
+        Upload,
     },
     setup() {
         const { isDaytime, switchTheme } = inject("switchTheme");
@@ -248,6 +286,82 @@ export default {
                 this.$store.commit("setQueryMode", "admin_answered");
             }
             this.$store.commit("updateQuestion");
+        },
+        handleExport() {
+            exportQuestions()
+                .then((res) => {
+                    const json = JSON.stringify(res.data, null, 2);
+                    const blob = new Blob([json], { type: "application/json" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "questions.json";
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    window.$message.success("导出成功");
+                })
+                .catch((err) => {
+                    const msg = err?.response?.data?.message;
+                    window.$message.error(
+                        msg ? `导出失败：${msg}` : "导出失败",
+                    );
+                });
+        },
+        triggerImport() {
+            this.$refs.fileInput.click();
+        },
+        handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!Array.isArray(data)) {
+                        window.$message.error("文件格式错误：需要 JSON 数组");
+                        return;
+                    }
+                    importQuestions(data)
+                        .then((res) => {
+                            if (res.data.status === "ok") {
+                                const r = res.data.result;
+                                const failedCount = Array.isArray(r.failed)
+                                    ? r.failed.length
+                                    : 0;
+                                if (failedCount > 0) {
+                                    const firstError = r.failed[0];
+                                    window.$message.warning(
+                                        `导入完成：新增 ${r.imported} 条，更新 ${r.updated} 条，失败 ${failedCount} 条。首条失败记录：${firstError.id}，原因：${firstError.message}`,
+                                    );
+                                } else {
+                                    window.$message.success(
+                                        `导入成功：新增 ${r.imported} 条，更新 ${r.updated} 条`,
+                                    );
+                                }
+                                this.$store.commit("updateQuestion");
+                            } else {
+                                window.$message.error(
+                                    res.data.message
+                                        ? `导入失败：${res.data.message}`
+                                        : "导入失败",
+                                );
+                            }
+                        })
+                        .catch((err) => {
+                            const msg = err?.response?.data?.message;
+                            window.$message.error(
+                                msg ? `导入失败：${msg}` : "导入失败：网络错误",
+                            );
+                        });
+                } catch {
+                    window.$message.error("文件解析失败：不是有效的 JSON");
+                }
+            };
+            reader.onerror = () => {
+                window.$message.error("文件读取失败");
+            };
+            reader.readAsText(file);
+            event.target.value = "";
         },
     },
 };

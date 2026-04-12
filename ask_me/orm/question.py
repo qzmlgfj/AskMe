@@ -90,3 +90,5 @@ class Question(db.Model):
         # datetime.UTC于Python3.11引入，3.10及以下版本仍使用datetime.utcnow()
         question.answered_at = datetime.utcnow().replace(microsecond=0)
         db.session.commit()
+
+

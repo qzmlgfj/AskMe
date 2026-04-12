@@ -34,8 +34,8 @@ def login():
         else:
             return jsonify({"authenticated": False})
     except Exception as e:
-        current_app.logger.error(e)
-        return jsonify({"status": "fail"})
+        current_app.logger.error(f"Login failed: {e}")
+        return jsonify({"status": "fail", "message": "登录失败，请稍后重试"})
 
 
 @auth_bp.route("register", methods=["POST"])
@@ -47,8 +47,8 @@ def register():
         Admin.add(data["username"], data["password"])
         return jsonify({"status": "ok"})
     except Exception as e:
-        current_app.logger.error(e)
-        return jsonify({"status": "fail"})
+        current_app.logger.error(f"Register failed: {e}")
+        return jsonify({"status": "fail", "message": "注册失败，请稍后重试"})
 
 
 @auth_bp.route("checkadmin", methods=["GET"])

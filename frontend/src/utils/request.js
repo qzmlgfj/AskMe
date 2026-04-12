@@ -83,6 +83,21 @@ function checkAdminExists() {
     });
 }
 
+function exportQuestions() {
+    return service({
+        method: "GET",
+        url: "/api/question/export",
+    });
+}
+
+function importQuestions(data) {
+    return service({
+        method: "POST",
+        url: "/api/question/import",
+        data: data,
+    });
+}
+
 export {
     getVersion,
     getQuestions,
@@ -95,4 +110,6 @@ export {
     register,
     getCurrentUser,
     checkAdminExists,
+    exportQuestions,
+    importQuestions,
 };
