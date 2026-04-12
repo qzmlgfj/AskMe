@@ -20,7 +20,7 @@ jobs:
 
       - name: Read version
         id: version
-        run: echo "version=$(python -c 'from ask_me.version import __version__; print(__version__)')" >> $GITHUB_OUTPUT
+        run: echo "version=$(grep -oP '(?<=__version__ = \")[^\"]+' ask_me/version.py)" >> $GITHUB_OUTPUT
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
