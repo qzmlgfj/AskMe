@@ -1,5 +1,5 @@
 <template>
-    <n-config-provider :theme="naiveTheme">
+    <n-config-provider :theme="naiveTheme" :theme-overrides="themeOverrides">
         <n-layout>
             <div id="container">
                 <n-layout-header bordered>
@@ -66,6 +66,11 @@ import HeadBar from "./components/HeadBar.vue";
 import MainContent from "./components/MainContent.vue";
 import FootBar from "./components/FootBar.vue";
 
+import {
+    light as lightThemeOverrides,
+    dark as darkThemeOverrides,
+} from "./config/ThemeOverrides";
+
 export default {
     name: "App",
     components: {
@@ -89,6 +94,9 @@ export default {
     setup() {
         const isDaytime = ref(true);
         const naiveTheme = computed(() => (isDaytime.value ? {} : darkTheme));
+        const themeOverrides = computed(() =>
+            isDaytime.value ? lightThemeOverrides : darkThemeOverrides,
+        );
         const showModal = ref(false);
         const cardName = ref("");
         const store = useStore();
@@ -195,6 +203,7 @@ export default {
             showAddQuestionModal,
             initStateFromLocalStorage,
             handleResize,
+            themeOverrides,
         };
     },
     mounted() {
