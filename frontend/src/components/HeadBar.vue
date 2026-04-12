@@ -130,7 +130,6 @@ import {
     BrandGithub,
     Sun,
     Moon,
-    Search,
 } from "@vicons/tabler";
 import { useStore } from "vuex";
 import { load } from "jinrishici";
@@ -153,7 +152,6 @@ export default {
         BrandGithub,
         Sun,
         Moon,
-        Search,
     },
     setup() {
         const { isDaytime, switchTheme } = inject("switchTheme");
