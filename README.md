@@ -4,6 +4,8 @@
   </a>
 </div>
 
+[![Build Docker images](https://github.com/qzmlgfj/AskMe/actions/workflows/deploy.yml/badge.svg?branch=master&event=push)](https://github.com/qzmlgfj/AskMe/actions/workflows/deploy.yml)
+
 # AskMe
 
 为了追随早已远去的潮流，写个匿名提问箱。

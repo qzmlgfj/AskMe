@@ -4,9 +4,15 @@ on:
   push:
     branches: ["master"]
 
+permissions:
+  contents: read
+
 jobs:
   build-and-push-dockerfile-image:
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://askme.antrol.xyz
 
     steps:
       - name: Checkout repository
