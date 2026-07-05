@@ -17,7 +17,7 @@
                     <n-input
                         v-model:value="formValue.question.title"
                         placeholder="输入问题标题"
-                        maxlength="15"
+                        :maxlength="cardLimits.titleMaxLength"
                         show-count
                     />
                 </n-form-item>
@@ -26,7 +26,7 @@
                         v-model:value="formValue.question.content"
                         type="textarea"
                         placeholder="输入问题内容"
-                        maxlength="100"
+                        :maxlength="cardLimits.contentMaxLength"
                         show-count
                     />
                 </n-form-item>
@@ -63,6 +63,7 @@ import {
 } from "naive-ui";
 
 import { addQuestion } from "@/utils/request";
+import { CARD_LIMITS } from "@/config/cardLimits";
 
 export default {
     name: "ModalCard",
@@ -142,6 +143,7 @@ export default {
             formValue,
             rules,
             addBtnDisabled,
+            cardLimits: CARD_LIMITS,
             handleAddQuestion,
         };
     },

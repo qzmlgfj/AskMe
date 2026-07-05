@@ -18,7 +18,7 @@
                         v-model:value="formValue.answer.content"
                         type="textarea"
                         placeholder="开始辱骂"
-                        maxlength="100"
+                        :maxlength="cardLimits.answerMaxLength"
                         show-count
                     />
                 </n-form-item>
@@ -48,6 +48,7 @@ import {
 } from "naive-ui";
 
 import { answerQuestion } from "@/utils/request";
+import { CARD_LIMITS } from "@/config/cardLimits";
 
 export default {
     name: "ModalCard",
@@ -111,6 +112,7 @@ export default {
             formRef,
             formValue,
             rules,
+            cardLimits: CARD_LIMITS,
             handleAnswerQuestion,
         };
     },

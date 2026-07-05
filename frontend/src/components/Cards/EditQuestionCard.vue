@@ -17,7 +17,7 @@
                     <n-input
                         v-model:value="formValue.question.title"
                         placeholder="输入问题标题"
-                        maxlength="15"
+                        :maxlength="cardLimits.titleMaxLength"
                         show-count
                     />
                 </n-form-item>
@@ -26,7 +26,7 @@
                         v-model:value="formValue.question.content"
                         type="textarea"
                         placeholder="输入问题内容"
-                        maxlength="100"
+                        :maxlength="cardLimits.contentMaxLength"
                         show-count
                     />
                 </n-form-item>
@@ -35,7 +35,7 @@
                         v-model:value="formValue.question.answer"
                         type="textarea"
                         placeholder="输入回答内容"
-                        maxlength="100"
+                        :maxlength="cardLimits.answerMaxLength"
                         show-count
                     />
                 </n-form-item>
@@ -83,6 +83,7 @@ import {
 } from "naive-ui";
 
 import { editQuestion, deleteQuestion } from "@/utils/request";
+import { CARD_LIMITS } from "@/config/cardLimits";
 import { computed } from "vue";
 
 export default {
@@ -191,6 +192,7 @@ export default {
             formRef,
             formValue,
             rules,
+            cardLimits: CARD_LIMITS,
             handleEditQuestion,
             showModal,
             handleDelete,
