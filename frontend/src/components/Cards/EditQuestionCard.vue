@@ -39,14 +39,20 @@
                         show-count
                     />
                 </n-form-item>
-                <n-form-item label="AI提问" path="question.ai_question">
-                    <n-switch v-model:value="formValue.question.ai_question" />
-                </n-form-item>
-                <n-form-item label="AI回答" path="question.ai_answer">
-                    <n-switch
-                        v-model:value="formValue.question.ai_answer"
-                        :disabled="!formValue.question.answer"
-                    />
+                <n-form-item label="AI 标记">
+                    <n-space>
+                        <n-checkbox
+                            v-model:checked="formValue.question.ai_question"
+                        >
+                            AI提问
+                        </n-checkbox>
+                        <n-checkbox
+                            v-model:checked="formValue.question.ai_answer"
+                            :disabled="!formValue.question.answer"
+                        >
+                            AI回答
+                        </n-checkbox>
+                    </n-space>
                 </n-form-item>
                 <n-space justify="space-around">
                     <n-form-item label="私密" path="question.private">
@@ -87,6 +93,7 @@ import {
     NInput,
     NSwitch,
     NButton,
+    NCheckbox,
     NModal,
     useMessage,
 } from "naive-ui";
@@ -105,6 +112,7 @@ export default {
         NInput,
         NSwitch,
         NButton,
+        NCheckbox,
         NModal,
     },
     setup() {
