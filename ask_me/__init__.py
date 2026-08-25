@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, render_template, send_from_directory
 from flask_cors import CORS
+from sqlalchemy import text
 import logging
 
 from .extensions import db
@@ -57,6 +58,15 @@ def create_app(*, is_test=False):
     def fav():
         return send_from_directory(os.path.join(app.root_path, "dist"), "favicon.png")
 
+    @app.route("/SKILL.md")
+    def skill_md():
+        """远程提供 AI 交互技能文档，供 Agent 直接拉取"""
+        return send_from_directory(
+            os.path.join(app.root_path, "skills"),
+            "SKILL.md",
+            mimetype="text/markdown",
+        )
+
     @app.route("/", defaults={"path": ""})
     @app.route("/<string:path>")
     @app.route("/<path:path>")
@@ -69,7 +79,7 @@ def create_app(*, is_test=False):
 
     CORS(app)
     register_extensions(app)
-    check_table_exists(app)
+    check_schema(app)
 
     app.register_blueprint(question_bp)
     app.register_blueprint(auth_bp)
@@ -81,9 +91,23 @@ def register_extensions(app):
     """Register Flask extensions."""
     db.init_app(app)
 
-def check_table_exists(app):
+
+def check_schema(app):
+    """确保表结构存在，并为存量库补齐新增列（SQLite 轻量迁移）"""
     with app.app_context():
-        engine = db.get_engine()
+        engine = db.engine
         insp = db.inspect(engine)
-        if "admin" not in insp.get_table_names():
+        tables = insp.get_table_names()
+        if "admin" not in tables or "question" not in tables:
             db.create_all()
+            insp = db.inspect(engine)
+            tables = insp.get_table_names()
+        if "question" not in tables:
+            return
+        # 存量库缺 ai_flags 列时补列（ALTER TABLE ADD COLUMN 常量默认值在 SQLite 下安全）
+        columns = [c["name"] for c in insp.get_columns("question")]
+        if "ai_flags" not in columns:
+            db.session.execute(
+                text("ALTER TABLE question ADD COLUMN ai_flags INTEGER DEFAULT 0")
+            )
+            db.session.commit()

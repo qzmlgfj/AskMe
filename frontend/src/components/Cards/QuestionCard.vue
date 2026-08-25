@@ -9,6 +9,9 @@
     >
         <template #header-extra>
             <n-space>
+                <n-tag v-if="argv.ai_question" type="info" size="small"
+                    >AI提问</n-tag
+                >
                 <n-button text strong @click="switchAnswer">
                     <template #icon>
                         <n-icon>
@@ -53,6 +56,9 @@
         <n-time :time="argv.created_at"></n-time>
         <template v-if="showAnswer" #footer>
             <div v-if="argv.answered" class="text-area">
+                <n-tag v-if="argv.ai_answer" type="info" size="small"
+                    >AI回答</n-tag
+                >
                 {{ argv.answer }}
                 <br />
                 <br />
@@ -74,7 +80,7 @@
 <script>
 import { ref, inject, computed } from "vue";
 import { useStore } from "vuex";
-import { NCard, NSpace, NButton, NIcon, NEmpty, NTime } from "naive-ui";
+import { NCard, NSpace, NButton, NIcon, NEmpty, NTime, NTag } from "naive-ui";
 import { Key, Activity, Cone, Pencil } from "@vicons/tabler";
 
 export default {
@@ -86,6 +92,7 @@ export default {
         NIcon,
         NEmpty,
         NTime,
+        NTag,
         Key,
         Activity,
         Cone,

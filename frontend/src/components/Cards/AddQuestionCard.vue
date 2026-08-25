@@ -114,23 +114,35 @@ export default {
             formRef.value?.validate((errors) => {
                 if (!errors) {
                     addBtnDisabled.value = true;
-                    addQuestion(formValue.value.question).then((res) => {
-                        if (res.data.status == "ok") {
-                            message.success(
-                                "添加成功，我们回头见，问题id为 " +
-                                    res.data.id +
-                                    "，记得保存",
-                                {
-                                    closable: true,
-                                    duration: 15000,
-                                },
+                    addQuestion(formValue.value.question)
+                        .then((res) => {
+                            if (res.data.status == "ok") {
+                                message.success(
+                                    "添加成功，我们回头见，问题id为 " +
+                                        res.data.id +
+                                        "，记得保存",
+                                    {
+                                        closable: true,
+                                        duration: 15000,
+                                    },
+                                );
+                                closeModal();
+                                store.commit("updateQuestion");
+                            } else {
+                                message.error("添加失败，要不待会试试？");
+                            }
+                        })
+                        .catch((err) => {
+                            // 429 等服务端错误信息优先展示（axios 非 2xx 会进 catch）
+                            const data = err.response && err.response.data;
+                            message.error(
+                                (data && data.message) ||
+                                    "添加失败，要不待会试试？",
                             );
-                            closeModal();
-                            store.commit("updateQuestion");
-                        } else {
-                            message.error("添加失败，要不待会试试？");
-                        }
-                    });
+                        })
+                        .finally(() => {
+                            addBtnDisabled.value = false;
+                        });
                 } else {
                     message.error("请检查输入");
                 }

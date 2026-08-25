@@ -22,6 +22,9 @@
                         show-count
                     />
                 </n-form-item>
+                <n-form-item label="AI回答" path="answer.ai_answer">
+                    <n-switch v-model:value="formValue.answer.ai_answer" />
+                </n-form-item>
             </n-form>
         </n-space>
         <template #footer>
@@ -43,6 +46,7 @@ import {
     NForm,
     NFormItem,
     NInput,
+    NSwitch,
     NButton,
     useMessage,
 } from "naive-ui";
@@ -58,6 +62,7 @@ export default {
         NForm,
         NFormItem,
         NInput,
+        NSwitch,
         NButton,
     },
     setup() {
@@ -69,6 +74,7 @@ export default {
         const formValue = ref({
             answer: {
                 content: "",
+                ai_answer: false,
             },
         });
 
@@ -90,6 +96,7 @@ export default {
                 const params = {
                     id: store.state.currentQuestion.id,
                     answer: formValue.value.answer.content,
+                    ai_answer: formValue.value.answer.ai_answer,
                 };
                 if (!errors) {
                     answerQuestion(params).then((res) => {

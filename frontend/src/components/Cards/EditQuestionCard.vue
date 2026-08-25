@@ -39,6 +39,15 @@
                         show-count
                     />
                 </n-form-item>
+                <n-form-item label="AI提问" path="question.ai_question">
+                    <n-switch v-model:value="formValue.question.ai_question" />
+                </n-form-item>
+                <n-form-item label="AI回答" path="question.ai_answer">
+                    <n-switch
+                        v-model:value="formValue.question.ai_answer"
+                        :disabled="!formValue.question.answer"
+                    />
+                </n-form-item>
                 <n-space justify="space-around">
                     <n-form-item label="私密" path="question.private">
                         <n-switch v-model:value="formValue.question.private" />
@@ -114,6 +123,8 @@ export default {
                 content: currentQuestion.value.content,
                 answer: currentQuestion.value.answer,
                 private: currentQuestion.value.private,
+                ai_question: !!currentQuestion.value.ai_question,
+                ai_answer: !!currentQuestion.value.ai_answer,
             },
         });
 
