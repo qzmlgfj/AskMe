@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, render_template, send_from_directory
+from flask.cli import with_appcontext
 from flask_cors import CORS
 from sqlalchemy import text
 import logging
@@ -77,9 +78,15 @@ def create_app(*, is_test=False):
     def return_version():
         return __version__
 
+    @app.cli.command("init-db")
+    @with_appcontext
+    def init_db_command():
+        """创建缺失的表并为存量库补齐新增列；部署时先于 worker 启动执行一次"""
+        check_schema(app)
+        print("Database schema is up to date.")
+
     CORS(app)
     register_extensions(app)
-    check_schema(app)
 
     app.register_blueprint(question_bp)
     app.register_blueprint(auth_bp)

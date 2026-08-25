@@ -30,4 +30,4 @@ RUN mkdir -p /app/instance
 
 EXPOSE 5000
 
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "ask_me:create_app()"]
+CMD ["sh", "-c", "flask --app 'ask_me:create_app()' init-db && exec gunicorn -b 0.0.0.0:5000 'ask_me:create_app()'"]

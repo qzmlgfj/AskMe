@@ -12,7 +12,9 @@
 
 ## 现已上线
 
-1.0版本现已发布，可使用`Gunicorn`进行部署
+1.0版本现已发布，可使用`Gunicorn`进行部署。启动服务前先初始化/升级数据库结构：
+
+`flask --app "ask_me:create_app()" init-db`
 
 `gunicorn -b 127.0.0.1:5000 -D --log-file "./askme.log" "ask_me:create_app()"`
 

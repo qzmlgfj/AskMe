@@ -197,6 +197,7 @@ main() {
 
         section "🚀 启动服务"
         cd_safe "$DEPLOY_DIR" || return 1
+        exec_safe "flask --app '$APP_MODULE' init-db" "数据库初始化失败" || return 1
         exec_safe "gunicorn -b '127.0.0.1:$PORT' -D --log-file './askme.log' '$APP_MODULE'" "服务启动失败" || return 1
         color_echo "green" "服务启动成功，监听端口 $PORT 🎉"
     fi
