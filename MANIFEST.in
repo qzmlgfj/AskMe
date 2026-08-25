@@ -1,2 +1,3 @@
 graft ask_me/dist
+graft ask_me/skills
 global-exclude *.pyc
