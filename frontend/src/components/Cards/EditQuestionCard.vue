@@ -55,8 +55,12 @@
                     </n-space>
                 </n-form-item>
                 <n-space justify="space-around">
-                    <n-form-item label="私密" path="question.private">
-                        <n-switch v-model:value="formValue.question.private" />
+                    <n-form-item>
+                        <n-checkbox
+                            v-model:checked="formValue.question.private"
+                        >
+                            私密
+                        </n-checkbox>
                     </n-form-item>
                     <n-form-item>
                         <n-button type="error" @click="show">删除问题</n-button>
@@ -91,7 +95,6 @@ import {
     NForm,
     NFormItem,
     NInput,
-    NSwitch,
     NButton,
     NCheckbox,
     NModal,
@@ -110,7 +113,6 @@ export default {
         NForm,
         NFormItem,
         NInput,
-        NSwitch,
         NButton,
         NCheckbox,
         NModal,

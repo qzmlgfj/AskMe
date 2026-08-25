@@ -9,9 +9,6 @@
     >
         <template #header-extra>
             <n-space>
-                <n-tag v-if="argv.ai_question" type="info" size="small"
-                    >AI提问</n-tag
-                >
                 <n-button text strong @click="switchAnswer">
                     <template #icon>
                         <n-icon>
@@ -53,16 +50,21 @@
             <br />
         </div>
         <!-- TODO 考虑渲染一下ID -->
-        <n-time :time="argv.created_at"></n-time>
+        <n-space align="center" :size="4">
+            <n-time :time="argv.created_at"></n-time>
+            <n-tag v-if="argv.ai_question" type="info" size="small">AI</n-tag>
+        </n-space>
         <template v-if="showAnswer" #footer>
             <div v-if="argv.answered" class="text-area">
-                <n-tag v-if="argv.ai_answer" type="info" size="small"
-                    >AI回答</n-tag
-                >
                 {{ argv.answer }}
                 <br />
                 <br />
-                <n-time :time="argv.answered_at"></n-time>
+                <n-space align="center" :size="4">
+                    <n-time :time="argv.answered_at"></n-time>
+                    <n-tag v-if="argv.ai_answer" type="info" size="small"
+                        >AI</n-tag
+                    >
+                </n-space>
             </div>
             <div v-else>
                 <n-empty description="暂无回答">

@@ -30,8 +30,10 @@
                         show-count
                     />
                 </n-form-item>
-                <n-form-item label="非公开" path="question.private">
-                    <n-switch v-model:value="formValue.question.private" />
+                <n-form-item>
+                    <n-checkbox v-model:checked="formValue.question.private">
+                        非公开
+                    </n-checkbox>
                 </n-form-item>
             </n-form>
         </n-space>
@@ -56,7 +58,7 @@ import {
     NSpace,
     NForm,
     NFormItem,
-    NSwitch,
+    NCheckbox,
     NInput,
     NButton,
     useMessage,
@@ -72,7 +74,7 @@ export default {
         NSpace,
         NForm,
         NFormItem,
-        NSwitch,
+        NCheckbox,
         NInput,
         NButton,
     },

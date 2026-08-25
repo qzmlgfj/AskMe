@@ -22,8 +22,10 @@
                         show-count
                     />
                 </n-form-item>
-                <n-form-item label="AI回答" path="answer.ai_answer">
-                    <n-switch v-model:value="formValue.answer.ai_answer" />
+                <n-form-item>
+                    <n-checkbox v-model:checked="formValue.answer.ai_answer">
+                        AI回答
+                    </n-checkbox>
                 </n-form-item>
             </n-form>
         </n-space>
@@ -46,7 +48,7 @@ import {
     NForm,
     NFormItem,
     NInput,
-    NSwitch,
+    NCheckbox,
     NButton,
     useMessage,
 } from "naive-ui";
@@ -62,7 +64,7 @@ export default {
         NForm,
         NFormItem,
         NInput,
-        NSwitch,
+        NCheckbox,
         NButton,
     },
     setup() {
