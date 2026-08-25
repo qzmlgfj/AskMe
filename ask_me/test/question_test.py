@@ -25,9 +25,12 @@ class QuestionTest(unittest.TestCase):
         client = cls.app.test_client()
         # 注册管理员并登录换取 token，供管理接口使用
         ret = client.post("/api/auth/register", json={"username": "admin", "password": "pass"})
-        assert ret.get_json()["status"] == "ok"
+        if ret.get_json()["status"] != "ok":
+            raise AssertionError("register admin failed")
         ret = client.post("/api/auth/login", json={"username": "admin", "password": "pass"})
-        cls.token = ret.get_json()["token"]
+        cls.token = ret.get_json().get("token")
+        if not cls.token:
+            raise AssertionError("login failed, no token returned")
 
     @classmethod
     def tearDownClass(cls):
@@ -66,6 +69,20 @@ class QuestionTest(unittest.TestCase):
         # 未标注时 AI 参与位默认均为 False
         self.assertFalse(result["ai_question"])
         self.assertFalse(result["ai_answer"])
+
+    def test_answer_empty_keeps_unanswered(self):
+        id = self._add_question().get_json()["id"]
+
+        self.client.post(
+            "/api/question/answer",
+            json={"id": id, "answer": "", "ai_answer": True},
+            headers=self._get_token_header(),
+        )
+
+        result = self.client.get(f"/api/question/get_question/{id}").get_json()[0]
+        self.assertFalse(result["answered"])
+        self.assertFalse(result["ai_answer"])
+        self.assertIsNone(result["answered_at"])
 
     def test_add_question_as_ai(self):
         ret = self._add_question(ai_question=True)
@@ -126,6 +143,7 @@ class QuestionTest(unittest.TestCase):
         self.assertTrue(result["ai_question"])
         self.assertFalse(result["answered"])
         self.assertFalse(result["ai_answer"])
+        self.assertIsNone(result["answered_at"])
 
     def test_export_includes_ai_flags(self):
         id = self._add_question(ai_question=True).get_json()["id"]
@@ -178,8 +196,16 @@ class QuestionTest(unittest.TestCase):
 
     def test_get_all_question(self):
         ret = self.client.get("/api/question/all", headers=self._get_token_header())
-        logger.debug(ret.get_json())
+        self.assertEqual(ret.status_code, 200)
+        questions = ret.get_json()
+        self.assertIsInstance(questions, list)
+        for question in questions:
+            self.assertIn("ai_question", question)
+            self.assertIn("ai_answer", question)
 
     def test_get_unanswered_question(self):
         ret = self.client.get("/api/question/unanswered", headers=self._get_token_header())
-        logger.debug(ret.get_json())
+        self.assertEqual(ret.status_code, 200)
+        questions = ret.get_json()
+        self.assertIsInstance(questions, list)
+        self.assertTrue(all(not question["answered"] for question in questions))

@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 from ..extensions import db
 
@@ -29,32 +29,32 @@ class Question(db.Model):
         self.content = content
         self.private = private
         self.ai_flags = AI_QUESTION_FLAG if ai_question else 0
-        # datetime.UTC于Python3.11引入，3.10及以下版本仍使用datetime.utcnow()
-        self.created_at = datetime.utcnow().replace(microsecond=0)
+        # 统一存 naive UTC（去掉 tzinfo），与既有数据和 ISO 输出格式保持一致
+        self.created_at = datetime.now(timezone.utc).replace(microsecond=0, tzinfo=None)
 
     @property
     def is_ai_question(self):
         """提问是否由 AI 发起"""
-        return bool(self.ai_flags & AI_QUESTION_FLAG)
+        return bool((self.ai_flags or 0) & AI_QUESTION_FLAG)
 
     @is_ai_question.setter
     def is_ai_question(self, value):
         if value:
-            self.ai_flags |= AI_QUESTION_FLAG
+            self.ai_flags = (self.ai_flags or 0) | AI_QUESTION_FLAG
         else:
-            self.ai_flags &= ~AI_QUESTION_FLAG
+            self.ai_flags = (self.ai_flags or 0) & ~AI_QUESTION_FLAG
 
     @property
     def is_ai_answer(self):
         """回答是否由 AI 撰写"""
-        return bool(self.ai_flags & AI_ANSWER_FLAG)
+        return bool((self.ai_flags or 0) & AI_ANSWER_FLAG)
 
     @is_ai_answer.setter
     def is_ai_answer(self, value):
         if value:
-            self.ai_flags |= AI_ANSWER_FLAG
+            self.ai_flags = (self.ai_flags or 0) | AI_ANSWER_FLAG
         else:
-            self.ai_flags &= ~AI_ANSWER_FLAG
+            self.ai_flags = (self.ai_flags or 0) & ~AI_ANSWER_FLAG
 
     def to_dict(self):
         """API 输出结构：AI 标注以两个独立布尔暴露，位编码仅存在于存储层"""
@@ -80,20 +80,23 @@ class Question(db.Model):
 
     @classmethod
     def update(cls, id, title, content, private, answer, ai_question=False, ai_answer=False):
-        question = cls.query.get(id)
+        question = db.session.get(cls, id)
         question.title = title
         question.content = content
         question.private = private
         question.answer = answer
-        question.answered = answer != ""
+        has_answer = bool(answer)
+        question.answered = has_answer
         question.is_ai_question = ai_question
-        # 回答被清空时同步清除 AI 回答标记
-        question.is_ai_answer = answer != "" and ai_answer
+        # 回答被清空时同步清除 AI 回答标记与回答时间
+        question.is_ai_answer = has_answer and ai_answer
+        if not has_answer:
+            question.answered_at = None
         db.session.commit()
 
     @classmethod
     def delete(cls, id):
-        question = cls.query.get(id)
+        question = db.session.get(cls, id)
         db.session.delete(question)
         db.session.commit()
 
@@ -103,7 +106,7 @@ class Question(db.Model):
 
     @classmethod
     def get_by_id(cls, id):
-        return cls.query.get(id)
+        return db.session.get(cls, id)
 
     @classmethod
     def get_unanswered(cls):
@@ -123,10 +126,14 @@ class Question(db.Model):
 
     @classmethod
     def answer_question(cls, id, answer, ai_answer=False):
-        question = cls.query.get(id)
-        question.answered = True
+        question = db.session.get(cls, id)
         question.answer = answer
-        question.is_ai_answer = ai_answer
-        # datetime.UTC于Python3.11引入，3.10及以下版本仍使用datetime.utcnow()
-        question.answered_at = datetime.utcnow().replace(microsecond=0)
+        has_answer = bool(answer)
+        question.answered = has_answer
+        question.is_ai_answer = has_answer and ai_answer
+        question.answered_at = (
+            datetime.now(timezone.utc).replace(microsecond=0, tzinfo=None)
+            if has_answer
+            else None
+        )
         db.session.commit()

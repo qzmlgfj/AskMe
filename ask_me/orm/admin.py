@@ -31,14 +31,14 @@ class Admin(db.Model):
 
     @classmethod
     def update(cls, id, username, password):
-        admin = cls.query.get(id)
+        admin = db.session.get(cls, id)
         admin.username = username
         admin.password_hash = generate_password_hash(password)
         db.session.commit()
 
     @classmethod
     def delete(cls, id):
-        admin = cls.query.get(id)
+        admin = db.session.get(cls, id)
         db.session.delete(admin)
         db.session.commit()
 

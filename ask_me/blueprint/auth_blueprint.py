@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from flask import Blueprint, jsonify, request, current_app
 import jwt
 
@@ -21,12 +21,12 @@ def login():
             user = Admin.query.first()
             if user is None:
                 raise RuntimeError("User not found")
-            # datetime.UTC于Python3.11引入，3.10及以下版本仍使用datetime.utcnow()
+            # JWT exp 使用 naive UTC 时间戳，与验证侧保持一致
             token = jwt.encode(
                 {
                     "username": data["username"],
                     "ip": request.remote_addr,
-                    "exp": datetime.utcnow() + timedelta(minutes=30),
+                    "exp": datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(minutes=30),
                 },
                 user.secret_key
             )

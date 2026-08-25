@@ -107,7 +107,14 @@ def check_schema(app):
         # 存量库缺 ai_flags 列时补列（ALTER TABLE ADD COLUMN 常量默认值在 SQLite 下安全）
         columns = [c["name"] for c in insp.get_columns("question")]
         if "ai_flags" not in columns:
-            db.session.execute(
-                text("ALTER TABLE question ADD COLUMN ai_flags INTEGER DEFAULT 0")
-            )
-            db.session.commit()
+            try:
+                db.session.execute(
+                    text("ALTER TABLE question ADD COLUMN ai_flags INTEGER DEFAULT 0")
+                )
+                db.session.commit()
+            except Exception as e:
+                # 多 worker 并发启动时可能同时执行 ALTER，失败后重新确认列是否存在
+                db.session.rollback()
+                columns = [c["name"] for c in db.inspect(db.engine).get_columns("question")]
+                if "ai_flags" not in columns:
+                    raise e

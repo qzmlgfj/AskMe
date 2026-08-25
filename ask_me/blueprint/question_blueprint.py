@@ -153,7 +153,7 @@ def import_questions():
                     raise ValueError("missing required field: content")
 
                 sp = db.session.begin_nested()
-                question = Question.query.get(item["id"])
+                question = db.session.get(Question, item["id"])
                 created_at = datetime.fromisoformat(item["created_at"]) if item.get("created_at") else None
                 answered_at = datetime.fromisoformat(item["answered_at"]) if item.get("answered_at") else None
                 ai_question = bool(item.get("ai_question", False))
