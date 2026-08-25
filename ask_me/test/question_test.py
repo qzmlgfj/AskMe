@@ -172,6 +172,10 @@ class QuestionTest(unittest.TestCase):
         ).get_json()
         item = next(q for q in exported if q["id"] == id)
 
+        # 时间必须带 UTC 时区信息，前端才能换算成本地时间
+        self.assertTrue(item["created_at"].endswith("+00:00"))
+        self.assertTrue(item["answered_at"].endswith("+00:00"))
+
         # 删除原记录后原样导入，验证时间与 AI 标注可完整还原
         self.client.post(
             "/api/question/delete", json={"id": id}, headers=self._get_token_header()
@@ -190,9 +194,11 @@ class QuestionTest(unittest.TestCase):
         self.assertTrue(restored["ai_answer"])
 
     def test_skill_md_served(self):
-        ret = self.client.get("/SKILL.md")
-        self.assertEqual(ret.status_code, 200)
-        self.assertIn(b"api/question/add", ret.data)
+        for path in ("/SKILL.md", "/skill.md", "/SKILL.md/", "/skill.md/"):
+            ret = self.client.get(path)
+            self.assertEqual(ret.status_code, 200, f"{path} should be served")
+            self.assertEqual(ret.mimetype, "text/markdown")
+            self.assertIn(b"api/question/add", ret.data)
 
     def test_get_all_question(self):
         ret = self.client.get("/api/question/all", headers=self._get_token_header())

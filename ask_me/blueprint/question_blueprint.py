@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from flask import Blueprint, current_app, jsonify, request
 
@@ -13,6 +13,16 @@ question_bp = Blueprint("/api/question", __name__, url_prefix="/api/question")
 def _format_import_error(item, error):
     item_id = item.get("id", "<missing-id>") if isinstance(item, dict) else "<invalid-item>"
     return {"id": item_id, "message": str(error)}
+
+
+def _parse_datetime(value):
+    """解析导出 JSON 中的时间；带时区的值统一归一化为 naive UTC 存库"""
+    if not value:
+        return None
+    parsed = datetime.fromisoformat(value)
+    if parsed.tzinfo is not None:
+        parsed = parsed.astimezone(timezone.utc).replace(tzinfo=None)
+    return parsed
 
 
 # 查看所有问题，参数为all
@@ -154,8 +164,8 @@ def import_questions():
 
                 sp = db.session.begin_nested()
                 question = db.session.get(Question, item["id"])
-                created_at = datetime.fromisoformat(item["created_at"]) if item.get("created_at") else None
-                answered_at = datetime.fromisoformat(item["answered_at"]) if item.get("answered_at") else None
+                created_at = _parse_datetime(item.get("created_at"))
+                answered_at = _parse_datetime(item.get("answered_at"))
                 ai_question = bool(item.get("ai_question", False))
                 ai_answer = bool(item.get("ai_answer", False))
                 if question:

@@ -62,11 +62,11 @@ class Question(db.Model):
             "id": self.id,
             "title": self.title,
             "content": self.content,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "created_at": self.created_at.replace(tzinfo=timezone.utc).isoformat() if self.created_at else None,
             "private": self.private,
             "answered": self.answered,
             "answer": self.answer,
-            "answered_at": self.answered_at.isoformat() if self.answered_at else None,
+            "answered_at": self.answered_at.replace(tzinfo=timezone.utc).isoformat() if self.answered_at else None,
             "ai_question": self.is_ai_question,
             "ai_answer": self.is_ai_answer,
         }
