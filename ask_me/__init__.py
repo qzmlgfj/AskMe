@@ -59,7 +59,11 @@ def create_app(*, is_test=False):
     def fav():
         return send_from_directory(os.path.join(app.root_path, "dist"), "favicon.png")
 
+    # 同时注册大小写与尾斜杠别名，避免误写路径时落到 SPA catch-all
     @app.route("/SKILL.md")
+    @app.route("/skill.md")
+    @app.route("/SKILL.md/")
+    @app.route("/skill.md/")
     def skill_md():
         """远程提供 AI 交互技能文档，供 Agent 直接拉取"""
         return send_from_directory(
